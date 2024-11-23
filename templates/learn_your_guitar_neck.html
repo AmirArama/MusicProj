@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block styles %}
+    {{ super() }}
+{% endblock %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+    <br>
+    <div style="width: 70%;">
+        {% include '_fretboard_active.html' %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }} 
+    <!-- Ensure base scripts are loaded -->
+    <script src="{{ url_for('static', filename='js/pitchfinder.bundle.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/fretboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/fretboard_update.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/storeNotes.js') }}"></script>
+{% endblock %}

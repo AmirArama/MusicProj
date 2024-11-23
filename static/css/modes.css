@@ -1,0 +1,64 @@
+.carousel-item {
+    padding: 0rem;
+    text-align: left;
+}
+.page-number {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #555;
+}
+
+
+/* Carousel controls */
+.carousel-control-prev,
+.carousel-control-next {
+    position: absolute;
+    top: 50%; /* Align vertically */
+    transform: translateY(-50%);
+    font-size: 2rem; /* Size of the arrows */
+    font-weight: bold;
+    color: black; /* Black arrow color */
+    z-index: 1; /* Ensure it's above carousel content */
+    text-decoration: none; /* Remove underline */
+    opacity: 1 !important; /* Always visible */
+    background: none; /* No background */
+    border: none; /* No borders */
+    padding: 0; /* No padding */
+    width: auto;
+    height: auto;
+}
+
+/* Left arrow alignment */
+.carousel-control-prev {
+    left: 20px; /* Adjust distance from the left */
+}
+
+/* Right arrow alignment */
+.carousel-control-next {
+    right: 20px; /* Adjust distance from the right */
+}
+
+/* Default Bootstrap icons hidden */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    display: none;
+}
+
+/* Custom arrow design */
+.carousel-control-prev .arrow,
+.carousel-control-next .arrow {
+    color: black; /* Arrow color */
+    font-size: 2.5rem; /* Size of the arrows */
+    font-weight: bold; /* Bold arrows */
+    display: block;
+}
+
+/* Remove hover effects */
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    color: black; /* Keep arrows black even on hover */
+}
+
+.carousel-item {
+    transition: transform 0.3s ease-in-out !important; /* Adjust duration (0.3s for snappy transitions) */
+}

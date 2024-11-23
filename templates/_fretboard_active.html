@@ -1,0 +1,46 @@
+{% set x_offset = 200 %}
+{% set y_offset = 100 %}
+
+<style>
+.fretboard-note {
+        cursor: pointer;
+    }
+    .fretboard-note:hover {
+        filter: brightness(1.8) drop-shadow(7px 7px 7px rgba(0, 0, 0, 0.8));
+    }
+    .active {
+        filter: brightness(1.8) drop-shadow(7px 7px 7px rgba(0, 0, 0, 0.8));
+    }
+
+</style>
+
+<h1>Active</h1>
+
+<svg id="guitar-fretboard" viewBox="0 0 {{3274+x_offset}} {{786+y_offset}}">
+    <image href="/static/images/empty_fretboard.png"  x="{{x_offset}}" y="{{y_offset}}" width="3274" height="786" />
+    <image href="/static/images/bone.png"  x="{{x_offset-20}}" y="{{y_offset}}" width="20" height="558" />
+    
+    {% for key, (x, y) in fretboard_coordinates.items() %}
+        {% set note, octave, color = fretboard_notes.get(key, ("", "", "black")) %}
+        {% if note %}
+        {% set string = key[0] %}
+        {% set fret = key[1] %}
+        <image
+            href="{{ url_for('static', filename='images/notes/note_' ~ note ~ '.png') }}"
+            x="{{ x + x_offset - 50 }}" 
+            y="{{ y + y_offset - 50 }}"
+            id="{{note}}{{octave}}_{{x}}_{{y}}"
+            class="fretboard-note"
+            onclick="toggleNoteActive('{{note}}{{octave}}_{{x}}_{{y}}')"
+        />
+        {% endif %}
+    {% endfor %}
+</svg>
+
+<div class="d-flex justify-content-center">
+    <button class="btn btn-primary" onclick="setup()">Start Listen</button>
+</div>
+
+<script>
+ 
+</script>

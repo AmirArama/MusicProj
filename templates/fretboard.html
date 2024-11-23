@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block styles %}
+    {{ super() }}
+{% endblock %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+    <br>
+    <div style="width: 70%;">
+        {% include '_fretboard.html' %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }} 
+    <!-- Ensure base scripts are loaded -->
+    <script src="{{ url_for('static', filename='js/s3_manager.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/s3_explorer.js') }}"></script>
+{% endblock %}

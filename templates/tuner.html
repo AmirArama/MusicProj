@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block styles %}
+{{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tuner_meter.css') }}">
+{% endblock %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+    <br>
+    <div style="width: 100%;">
+        {% include '_tuner.html' %}
+    </div>
+    <h1>
+        A tuner is an essential tool for musicians that helps ensure their instruments are accurately tuned
+        to the correct pitch. By measuring the frequency of a played note and comparing it to a standard 
+        reference pitch, usually A4 at 440 Hz, a tuner can indicate if the note is too sharp (higher than desired)
+        or too flat (lower than desired). This allows musicians to adjust the tension of their instrument's 
+        strings, reeds, or other components until each note matches the target pitch.
+    </h1>
+    <br>
+    <h1>
+        The standard tuning for a six-string guitar is as follows, with the corresponding note names and octaves:
+    </h1>
+    <br>
+    <h2 style="color: #3e2a75;"><b>1. 6th String:</b> E2 (82.41 Hz)</h2>
+    <h2 style="color: #3e2a75;"><b>2. 5th String:</b> A2 (110.00 Hz)</h2>
+    <h2 style="color: #3e2a75;"><b>3. 4th String:</b> D3 (146.83 Hz)</h2>
+    <h2 style="color: #3e2a75;"><b>4. 3rd String:</b> G3 (196.00 Hz)</h2>
+    <h2 style="color: #3e2a75;"><b>5. 2nd String:</b> B3 (246.94 Hz)</h2>
+    <h2 style="color: #3e2a75;"><b>6. 1st String:</b> E4 (329.63 Hz)</h2>
+    <br>
+    <h1>
+        This tuning, often called E standard tuning, is the most commonly used tuning in Western music for guitars. 
+        It allows for a balance of low and high notes, making it versatile for a wide range of genres. 
+        The tuning moves in intervals of perfect fourths between adjacent strings, except for the interval between the 
+        2nd (B) and 3rd (G) strings, which is a major third.
+    </h1>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }} 
+    <script src="{{ url_for('static', filename='js/pitchfinder.bundle.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/tuner.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/tuner_meter.js') }}"></script>
+{% endblock %}

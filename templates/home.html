@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/_s3_explorer.css') }}">
+{% endblock %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+    <br>
+    <h1>Welcome to Guitar Made Simple – your ultimate resource for effortlessly mastering the guitar. Here, 
+    you’ll journey from the basics to the finer points of music theory, 
+    gaining tools that deepen your understanding and expand your musical creativity.</h1>
+
+    <h1>Start by discovering the fretboard, building a solid foundation in identifying notes and patterns so that each fret becomes familiar terrain.</h1>
+     
+    <br>
+    <img src="/static/images/fretboard_with_padding.png" alt="Fretboard" style="width: 70%; display: block; margin: 20px auto;">
+    <br>
+       
+    <h1>From there, dive into scales and unlock the blueprint of music, learning how scales lay the groundwork for melody and harmony. 
+    Move seamlessly into chord triads, where you'll shape simple yet powerful harmonies that set the stage for complex expressions.
+    As you progress, explore arpeggios, a bridge to improvisation that brings chords to life across each string. 
+    Then, add depth to your playing by learning techniques like pivoting and developing the fluidity of bebop, 
+    embracing the art of swift transitions and intricate melodies. 
+    
+    With Guitar Made Simple, theory becomes sound, every note has purpose, and each lesson brings you closer to playing with clarity and confidence. 
+    Dive in, and transform your approach to guitar – one concept, one scale, and one melody at a time.</h1>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }} 
+    <!-- Ensure base scripts are loaded -->
+    <script src="{{ url_for('static', filename='js/s3_manager.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/s3_explorer.js') }}"></script>
+{% endblock %}

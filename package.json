@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "pitchfinder": "^2.3.2",
+    "pitchy": "^4.1.0"
+  },
+  "name": "musicproj",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

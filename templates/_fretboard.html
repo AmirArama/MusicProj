@@ -1,0 +1,16 @@
+
+{% set x_offset = 200 %}
+{% set y_offset = 100 %}
+<h1>None Active</h1>
+
+<svg id="guitar-fretboard" viewBox="0 0 {{3274+x_offset}} {{786+y_offset}}">
+    <image href="/static/images/empty_fretboard.png"  x="{{x_offset}}" y="{{y_offset}}" width="3274" height="786" />
+    <image href="/static/images/bone.png"  x="{{x_offset-20}}" y="{{y_offset}}" width="20" height="558" />
+    {% for key, (x, y) in fretboard_coordinates.items() %}
+        {% set note, octave, color = fretboard_notes.get(key, ("", "", "black")) %}
+        {% if note %}
+            <image href="{{ url_for('static', filename='images/notes/note_' ~ note ~ '.png') }}" x="{{ x+x_offset-50 }}" y="{{ y+y_offset-50 }}"/>
+        {% endif %}
+    {% endfor %}
+
+</svg>
