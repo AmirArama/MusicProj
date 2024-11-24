@@ -20,7 +20,7 @@ pages.append(page)
 images.append(image)
 imagesSize.append(imageSize)
 
-title = "Modes"
+title = "The Seven Modes"
 page = """
 Modes are permutations of other scales. If we take the key of C as an example, 
 starting from the C major scale, and begin with the first interval (scale degree one), 
@@ -37,7 +37,7 @@ pages.append(page)
 images.append(image)
 imagesSize.append(imageSize)
 
-title = "Modes"
+title = "The Seven Modes"
 page = """
 Continuing this pattern, if we start on the third degree, E, 
 we derive the Phrygian mode. Similarly, beginning on F (the fourth degree) 
@@ -58,7 +58,7 @@ pages.append(page)
 images.append(image)
 imagesSize.append(imageSize)
 
-title = "Mode diagram"
+title = "The Seven Modes Diagram"
 page = """This diagram illustrates the seven modes of the major scale, starting from different scale degrees of C major. Each row represents a mode, showing the chord progression associated with it, beginning from the respective scale degree."""
 image = "/static/images/modes/modes_diagram_transparent.png"
 imageSize = 50
@@ -68,8 +68,8 @@ pages.append(page)
 images.append(image)
 imagesSize.append(imageSize)
 
-title = "Mode diagram"
-page = """This shifted mode diagram represents the same seven modes of the C major scale but aligns the chords horizontally to emphasize their relative positions. Each row starts from the corresponding mode's tonic and displays the sequence of chords in the mode, highlighting the modal progression visually."""
+title = "The Seven Modes Diagram Shifted"
+page = """This shifted modes diagram represents the same seven modes of the C major scale but aligns the chords horizontally to emphasize their relative positions. Each row starts from the corresponding mode's tonic and displays the sequence of chords in the mode, highlighting the modal progression visually."""
 image = "/static/images/modes/modes_diagram_shifted.png"
 imageSize = 60
 
@@ -78,7 +78,7 @@ pages.append(page)
 images.append(image)
 imagesSize.append(imageSize)
 
-title = "Mode diagram"
+title = "The Seven Modes Intervals diagram"
 page = """This shifted mode diagram uses "W" (whole step) and "H" (half step) symbols to represent the intervallic structure of each mode in the C major scale. The horizontal alignment emphasizes the unique sequence of whole and half steps for each mode, starting from its tonic."""
 image = "\static\images\modes\modes_diagram_shifted_WH.png"
 imageSize = 60
@@ -88,9 +88,8 @@ pages.append(page)
 images.append(image)
 imagesSize.append(imageSize)
 
-title = "Mode diagram"
+title = "A Personal Reflection"
 page = """
-A Personal Reflection
 It took me some time to fully grasp what modes are and how to harmonize them. But now that it has finally clicked for me, I feel confident in trying to simplify it for anyone reading this.
 """
 image = ""
@@ -101,7 +100,7 @@ pages.append(page)
 images.append(image)
 imagesSize.append(imageSize)
 
-title = "Mode diagram"
+title = "The Seven Modes And The Circle of Fifths"
 page = """
 In Western music, scales pick up sharps or flats based on the relationship between the intervals of the major scale and how they are imposed on different roots. For example, if we apply the formula of WWHWWWH (Whole-Whole-Half-Whole-Whole-Whole-Half) to the A as the root, while maintaining the order of the notes A-B-C-D-E-F-G, we immediately notice the introduction of three sharps (F#, C#, and G#) to preserve the pattern of the major scale. This principle forms the foundation of the Circle of Fifths, which organizes the addition of sharps as we move clockwise and flats as we move counterclockwise.
 """
@@ -113,7 +112,7 @@ pages.append(page)
 images.append(image)
 imagesSize.append(imageSize)
 
-title = "Mode diagram"
+title = "The Seven Modes And The Circle of Fifths"
 page = """
 Modes, however, follow an intriguing pattern. While they adhere to the same formula of whole and half steps as their parent major scale, they “undo” or “revert” the sharps or flats introduced by their relative major scale. For example, A Aeolian is built from the C major scale, so it reverts the three sharps introduced by the A major scale. These reversions are represented as three flats in the A Aeolian chord degrees. Another example is F Lydian: since F major introduces one flat and C major (its parent scale) removes it, F Lydian ends up with one sharp.
 The number of sharps or flats in a mode is related to the parallel major scale of that mode!
@@ -126,7 +125,7 @@ pages.append(page)
 images.append(image)
 imagesSize.append(imageSize)
 
-title = "Mode diagram"
+title = "Interval Structure Of The Seven Modes, Using Roman Numeral Notation"
 page = """
 "As long as you know the sharps or flats of the parent major scale (from the Circle of Fifths), you can determine the sharps or flats in any mode by understanding its structure relative to the parent scale. Specifically, a mode will 'revert' or adjust the sharps or flats introduced by its parent scale to align with the interval pattern unique to that mode."
 D Mixolydian - is actualy G major with F#. Its relative D major has F# and C# (in the 7th position) - So again we get a flat 7th by reverting this 7th
@@ -140,7 +139,7 @@ pages.append(page)
 images.append(image)
 imagesSize.append(imageSize)
 
-title = "Mode diagram"
+title = "Interval Structure Of The Seven Modes, Using Roman Numeral Notation"
 page = """
 The formula-based approach: To systematically modify the chords of the parallel major scale 
 to match the mode's structure. This involves adjusting the chord types (major, minor, diminished) 
@@ -157,7 +156,7 @@ pages.append(page)
 images.append(image)
 imagesSize.append(imageSize)
 
-title = "Mode diagram"
+title = "The Enhanced Modal Circle Of Fifths"
 page = """
 The modal circle of fifths is an incredibly intuitive tool that I use to visualize and understand musical concepts more easily. The inner ring represents the roots of the C major scale (or any mode derived from it). This enhanced version of the circle of fifths provides a comprehensive view of scales, modes, the number of flats or sharps, and the harmonization of each mode—all at a glance. Once you grasp how to interpret it, this tool becomes invaluable for navigating music theory in a clear and organized manner."""
 image = ""
@@ -168,7 +167,7 @@ pages.append(page)
 images.append(image)
 imagesSize.append(imageSize)
 
-title = "Mode diagram"
+title = "The Enhanced Modal Circle Of Fifths"
 page = """
 Within a harmonized major scale (Ionian mode), the inner green ring represents the three major chords of the harmonized scale. At the center is the I degree (tonic), to the left is the IV degree (subdominant), and to the right is the V degree (dominant). Moving outward, the blue ring represents the three minor chords: at the center is the vi degree (Aeolian), to the left is the ii degree (Dorian), and to the right is the iii degree (Phrygian). Finally, the red ring represents the vii° diminished chord.
 
@@ -184,7 +183,7 @@ pages.append(page)
 images.append(image)
 imagesSize.append(imageSize)
 
-title = "Mode diagram"
+title = "The Enhanced Modal Circle Of Fifths"
 page = """
 Within each Ionian (center green), the structure of this enhanced Circle of Fifths allows you to determine the number of flats or sharps, just as with the classical Circle of Fifths. Moving clockwise, sharps are added, while moving counterclockwise, flats are introduced. By focusing on the highlighted colored section surrounding a root, you can easily count the number of flats or sharps and identify which degrees of the scale or harmonized scale contain them. This visualization makes it intuitive to track their placement across the modes and harmonized chords.
 As one can see, C major (and its harmonized Ionian mode) has no sharps or flats. Moving to G major, we add one sharp, F, which becomes F# diminished. Progressing to D major, we add another sharp, C#, which forms the C# diminished chord. Meanwhile, F# shifts to the minor iii position as the circle rotates, maintaining the logical progression of sharps and their placement within the harmonized scale. Still more to come ..."""
@@ -196,7 +195,7 @@ pages.append(page)
 images.append(image)
 imagesSize.append(imageSize)
 
-title = "Mode diagram"
+title = "The Enhanced Modal Circle Of Fifths"
 page = """
 One fascinating observation in this arrangement is that each root note of a specific key, highlighted in red, appears exactly three times. This symmetry reflects the structure of the chromatic scale in Western music, which consists of 12 notes: C, C#, D, D#, E, F, F#, G, G#, A, A#, B. Multiplying these 12 notes by 3 gives us the 36 elements that form this circle.
 
@@ -224,7 +223,7 @@ pages.append(page)
 images.append(image)
 imagesSize.append(imageSize)
 
-title = "Mode diagram"
+title = "The Enhanced Modal Circle Of Fifths"
 page = """
 In the Circle of Fifths (also known as the Circle of Fourths when moving counterclockwise), sharps are added to the 7th degree moving clockwise, and flats to the 4th degree moving counterclockwise, to preserve the WWHWWWH interval structure of the major scale. The 7th degree sharpens to maintain a whole step before the tonic, while the 4th degree flattens to maintain a half step between the 3rd and 4th degrees. This dual-directional nature highlights the symmetry and utility of the circle, allowing it to seamlessly represent relationships in both sharps and flats.
 I am done explaining the Modal Circle of Fifths. Please use the dropdown menu to shift the highlighted space to explore a different key. Investigate the central modes of this key and how they relate to other modes as previously explained. For each mode, examine how it is harmonized and analyze the chord colors that emerge, shedding light on how each mode contributes to the unique character of the key. Happy exploring!
