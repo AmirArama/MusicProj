@@ -62,7 +62,7 @@
                     <div class="carousel-inner">
                         {% for page in carousel_data %}
                         <div class="carousel-item {% if loop.first %}active{% endif %}">
-                            <h3>{{ page.title }}</h3>
+                            <h3 style="text-decoration: underline;">{{ page.title }}</h3>
                             <h4>{{ page.content }}</h4>
                             {% if page.image %}
                             <div style="text-align: center;">

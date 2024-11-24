@@ -62,3 +62,19 @@
 .carousel-item {
     transition: transform 0.3s ease-in-out !important; /* Adjust duration (0.3s for snappy transitions) */
 }
+
+/* Carousel container with fixed height */
+#theoryCarousel {
+    min-height: 700px; /* Set a minimum height for the carousel */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Carousel items fully occupying the container */
+.carousel-item {
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 4rem;
+    padding-right: 4rem;
+}
