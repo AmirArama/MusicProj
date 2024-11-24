@@ -8,6 +8,7 @@ import math
 from fretboard_coordinates import fretboard_coordinates
 from fretboard_notes import fretboard_notes
 from modes_pages import *
+from modes_pages_r import *
 
 
 
@@ -197,7 +198,7 @@ def circle_of_fifths_modes():
             "page_number": 16,
         }
     ]
-    return render_template('circle_of_fifths_modes.html', carousel_data=carousel_data)
+    return render_template('circle_of_fifths_modes.html', carousel_data=modes_carousel_data)
 
 # Define the route for the home pagepython 
 @app.route('/tuner')
