@@ -9,6 +9,7 @@ from fretboard_coordinates import fretboard_coordinates
 from fretboard_notes import fretboard_notes
 from modes_pages import *
 from modes_pages_r import *
+from tenssions_pages import *
 
 
 
@@ -106,99 +107,11 @@ def the_circle_of_fifths():
 
 @app.route('/circle_of_fifths_modes')
 def circle_of_fifths_modes():
-    carousel_data = [
-        {
-            "title": "My Journey to Simplify Music Theory",
-            "content": page1 ,
-            "page_number": 1
-        },
-        {
-            "title": "Modes",
-            "content": page2,
-            "page_number": 2
-        },
-        {
-            "title": "Modes",
-            "content": page3,
-            "page_number": 3,
-        },
-        {
-            "title": "Modes",
-            "content": page4,
-            "page_number": 4,
-            "image": page4Image,
-            "image_size": page4imageSize
-        },
-        {
-            "title": "Modes",
-            "content": page5,
-            "page_number": 5,
-            "image": page5Image,
-            "image_size": page5imageSize
-        },
-        {
-            "title": "Modes",
-            "content": page6,
-            "page_number": 6,
-            "image": page6Image,
-            "image_size": page6imageSize
-        },
-        {
-            "title": "Modes",
-            "content": page7,
-            "page_number": 7,
-        },
-        {
-            "title": "Modes",
-            "content": page8,
-            "page_number": 8,
-        },
-        {
-            "title": "Modes",
-            "content": page9,
-            "page_number": 9,
-        },
-        {
-            "title": "Modes",
-            "content": page10,
-            "page_number": 10,
-            "image": page10Image,
-            "image_size": page10imageSize
-        },
-        {
-            "title": "Modes",
-            "content": page11,
-            "page_number": 11,
-            "image": page10Image,
-            "image_size": page10imageSize
-        },
-        {
-            "title": "Modes",
-            "content": page12,
-            "page_number": 12,
-        },
-        {
-            "title": "Modes",
-            "content": page13,
-            "page_number": 13,
-        },
-        {
-            "title": "Modes",
-            "content": page14,
-            "page_number": 14,
-        },
-        {
-            "title": "Modes",
-            "content": page15,
-            "page_number": 15,
-        },
-        {
-            "title": "Modes",
-            "content": page16,
-            "page_number": 16,
-        }
-    ]
     return render_template('circle_of_fifths_modes.html', carousel_data=modes_carousel_data)
+
+@app.route('/circle_of_fifths_tensions')
+def circle_of_fifths_tensions():
+    return render_template('circle_of_fifths_tensions.html', carousel_data=tenssions_carousel_data)
 
 # Define the route for the home pagepython 
 @app.route('/tuner')

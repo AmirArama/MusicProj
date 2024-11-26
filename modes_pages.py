@@ -110,3 +110,5 @@ page16 = """
 In the Circle of Fifths (also known as the Circle of Fourths when moving counterclockwise), sharps are added to the 7th degree moving clockwise, and flats to the 4th degree moving counterclockwise, to preserve the WWHWWWH interval structure of the major scale. The 7th degree sharpens to maintain a whole step before the tonic, while the 4th degree flattens to maintain a half step between the 3rd and 4th degrees. This dual-directional nature highlights the symmetry and utility of the circle, allowing it to seamlessly represent relationships in both sharps and flats.
 I am done explaining the Modal Circle of Fifths. Please use the dropdown menu to shift the highlighted space to explore a different key. Investigate the central modes of this key and how they relate to other modes as previously explained. For each mode, examine how it is harmonized and analyze the chord colors that emerge, shedding light on how each mode contributes to the unique character of the key. Happy exploring!
 """
+
+
