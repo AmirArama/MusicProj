@@ -1,0 +1,14 @@
+Interval,Ratio Text,Ratio Value,Cents
+Unison,2^(0/12),1.00000,0.00
+Minor Second,2^(1/12),1.05946,100.00
+Major Second,2^(2/12),1.12246,200.00
+Minor Third,2^(3/12),1.18921,300.00
+Major Third,2^(4/12),1.25992,400.00
+Perfect Fourth,2^(5/12),1.33484,500.00
+Tritone,2^(6/12),1.41421,600.00
+Perfect Fifth,2^(7/12),1.49831,700.00
+Minor Sixth,2^(8/12),1.58740,800.00
+Major Sixth,2^(9/12),1.68179,900.00
+Minor Seventh,2^(10/12),1.78180,1000.00
+Major Seventh,2^(11/12),1.88775,1100.00
+Octave,2^(12/12),2.00000,1200.00

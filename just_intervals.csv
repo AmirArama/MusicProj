@@ -1,0 +1,14 @@
+Interval,Ratio Text,Ratio Value,Cents
+Unison,1:1,1.00000,0.00
+Minor Second,16:15,1.06667,111.73
+Major Second,9:8,1.12500,203.91
+Minor Third,6:5,1.20000,315.64
+Major Third,5:4,1.25000,386.31
+Perfect Fourth,4:3,1.33333,498.04
+Tritone,45:32,1.40625,590.22
+Perfect Fifth,3:2,1.50000,701.96
+Minor Sixth,8:5,1.60000,813.69
+Major Sixth,5:3,1.66667,884.36
+Minor Seventh,9:5,1.80000,1017.60
+Major Seventh,15:8,1.87500,1088.27
+Octave,2:1,2.00000,1200.00

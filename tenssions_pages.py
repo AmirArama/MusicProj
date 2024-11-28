@@ -135,6 +135,19 @@ images.append(image)
 imagesSize.append(imageSize)
 sub_pages.append(page2)
 
+title = "Just Intonation Intervals"
+page = """
+"""
+page2 = """
+"""
+image = "static/images/just_table.png"
+imageSize = 75
+
+titles.append(title)
+pages.append(page)
+images.append(image)
+imagesSize.append(imageSize)
+sub_pages.append(page2)
 
 
 title = "Equal Temperament (c. 16th-18th Century)"
@@ -209,6 +222,20 @@ images.append(image)
 imagesSize.append(imageSize)
 sub_pages.append(page2)
 
+title = "Equal Temperamets Intervals"
+page = """
+"""
+page2 = """
+"""
+image = "static/images/equal_table.png"
+imageSize = 75
+
+titles.append(title)
+pages.append(page)
+images.append(image)
+imagesSize.append(imageSize)
+sub_pages.append(page2)
+
 title = "The shift in Tuning - to Just"
 page = """
 Pythagorean to Just Intonation: 
@@ -251,6 +278,38 @@ pages.append(page)
 images.append(image)
 imagesSize.append(imageSize)
 sub_pages.append(page2)
+
+title = "Circle Of Fifths - Just Intonation Vs. Equal Temperament"
+page = """
+Circle of Fifths in Just Intonation:
+In just tuning, the circle of fifths behaves differently. 
+Instead of using the 7-semitone equal-tempered fifth, 
+just tuning uses the pure perfect fifth with a ratio of 3:2. 
+This is a consonant interval and closely aligns with harmonic overtone series, 
+but as you stack these pure fifths, you encounter a problem called Pythagorean comma.
+When you stack 12 pure fifths (each a 3:2 ratio), the result doesn't exactly match 7 octaves (which is a 2:1 ratio). 
+This discrepancy creates a small difference in pitch—called the Pythagorean comma—which 
+needs to be "closed" if you want to fit into the 12-tone octave structure.
+The Pythagorean comma means that if you keep stacking pure fifths in just intonation, 
+eventually the intervals between the notes will not align perfectly with the starting note 
+when you complete the circle of fifths. 
+This results in a slightly out-of-tune relationship between the final note and the first note 
+(the tonic) when you return to the starting point of the circle. 
+As a result, the tonic will be slightly sharper than the original note, which causes a noticeable 
+discrepancy in tuning.
+"""
+page2 = """
+In this image, green denotes the Just stacking as one can see there is a constant drift from the Equal Temperament (in blue) aside from the Pythagorean comma issue.  
+"""
+image = "static/images/circle_plot_transparent.png"
+imageSize = 75
+
+titles.append(title)
+pages.append(page)
+images.append(image)
+imagesSize.append(imageSize)
+sub_pages.append(page2)
+
 
 
 
