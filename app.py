@@ -10,7 +10,8 @@ from fretboard_notes import fretboard_notes
 from modes_pages import *
 from modes_pages_r import *
 from tenssions_pages import *
-
+from chord_types import get_chord_types
+from chord_on_fretboard import find_all_key_chords_with_inversions
 
 
 import os
@@ -98,6 +99,41 @@ def learn_your_triads():
         fretboard_coordinates=fretboard_coordinates,
         fretboard_notes=fretboard_notes
     )
+
+chords = get_chord_types()
+print(chords)
+@app.route('/fretboard_chord_builder')
+def fretboard_chord_builder():
+    num_of_buttons_in_a_row = 4
+
+    return render_template(
+        'fretboard_chord_builder.html',
+        fretboard_coordinates=fretboard_coordinates,
+        fretboard_notes=fretboard_notes,
+        chords = chords,
+        num_of_buttons_in_a_row = num_of_buttons_in_a_row
+    )
+
+@app.route('/get_chord_data', methods=['GET'])
+def get_chord_data():
+    note = request.args.get('note')
+    chord = request.args.get('chord')
+
+    chord = chord.replace("_", " ")
+
+    print(note,chord)
+
+    c = find_all_key_chords_with_inversions(chord, note)
+
+     # Check JSON validity
+    try:
+        json.dumps(c)  # Serialize to JSON to ensure validity
+        print("JSON is valid")
+    except Exception as e:
+        print(f"Invalid JSON: {e}")
+        return jsonify({"error": "Invalid JSON"}), 500
+    
+    return jsonify(c)
 
 @app.route('/the_circle_of_fifths')
 def the_circle_of_fifths():

@@ -67,3 +67,39 @@ notes_22frets_sharp = generate_strings_notes_22frets("sharp")
 notes_22frets_flat = generate_strings_notes_22frets("flat")
 
 #print(notes_22frets_flat) 
+
+def rearange_the_fretbpard_dic(old_presentation):
+    x_keys = list(old_presentation.keys())
+    x_values = list(old_presentation.values())
+    notes_22frets_flat_r = []
+    for i,string in enumerate(x_keys):
+        #print(i,string)
+        #print(x_values[i])
+        for j,note in enumerate(x_values[i]):
+            notes_22frets_flat_r.append(
+                {
+                    "string":i+1,
+                    "fret": j,
+                    "note": note[0],
+                    "octave": note[1]
+                }
+            )
+    return notes_22frets_flat_r
+        
+notes_22frets_sharp_r = rearange_the_fretbpard_dic(notes_22frets_sharp)
+notes_22frets_flat_r = rearange_the_fretbpard_dic(notes_22frets_flat)
+
+#print (notes_22frets_flat_r)
+
+def get_a_note_on_fterboard(note):
+    notes = notes_22frets_flat_r
+    if len(note) == 2 and note[1] == "#":
+        notes = notes_22frets_sharp_r
+    fnotes = []
+    for idx in notes:
+        if idx["note"] == note:
+            fnotes.append(idx)
+    return fnotes
+
+enote = get_a_note_on_fterboard("E")
+print(enote)

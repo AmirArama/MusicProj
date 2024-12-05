@@ -31,153 +31,94 @@ interval_to_semitones = {
     "15": {"name": "double_octave", "semitones": 24},
 }
 
+chord_voicings = {
+    "closed_triad": [
+        [1, 2, 3],  # Strings 1, 2, and 3
+        [2, 3, 4],  # Strings 2, 3, and 4
+        [3, 4, 5],  # Strings 3, 4, and 5
+        [4, 5, 6],  # Strings 4, 5, and 6
+    ],
+    "closed_4note": [
+        [1, 2, 3, 4],  # Strings 1, 2, 3, and 4
+        [2, 3, 4, 5],  # Strings 2, 3, 4, and 5
+        [3, 4, 5, 6],  # Strings 3, 4, 5, and 6
+    ],
+    "drop_2": [
+        [1, 2, 3, 4],  # Strings 1, 2, 3, and 4
+        [2, 3, 4, 5],  # Strings 2, 3, 4, and 5
+        [3, 4, 5, 6],  # Strings 3, 4, 5, and 6
+    ],
+    "drop_3": [
+        [1, 2, 3, 5],  # Strings 1, 2, 3, and 5
+        [2, 3, 4, 6],  # Strings 2, 3, 4, and 6
+    ],
+    "drop_2_and_4": [
+        [1, 2, 4, 5],  # Strings 1, 2, 4, and 5
+        [2, 3, 5, 6],  # Strings 2, 3, 5, and 6
+    ],
+    "drop_2_and_3": [
+        [1, 2, 4, 6],  # Strings 1, 2, 4, and 6
+    ],
+}
+
 chord_types = {
-    'Diminished': {'Symbols': ["°","mb5", "-b5", "dim"], 'Function': ["1", "b3", "b5"]},
-    'Minor': {'Symbols': ["m", "-", "min"], 'Function': ["1", "b3", "5"]},
-    'Major': {'Symbols': ["M", "maj"], 'Function': ["1", "3", "5"]},
-    'Augmented': {'Symbols': ["+", "aug", "#5"], 'Function': ["1", "3", "#5"]},
-    'sus2': {'Symbols': ["sus2"], 'Function': ["1", "2", "5"]},
-    'sus4': {'Symbols': ["sus4"], 'Function': ["1", "4", "5"]},	
-    'Major (b5)': {'Symbols': ["(b5)", "Mb5", "Maj-5"], 'Function': ["1", "3", "b5"]},
-    'Diminished seventh':{'Symbols': ["°7","dim7"], 'Function': ["1", "b3", "b5","bb7"]},
-    'Half diminished': {'Symbols': ["Ø", "m7b5", "-7b5", "min7b5", "mi7b5"], 'Function': ["1", "b3", "b5", "b7"]},
-    'Minor seventh': {'Symbols': ["m7", "-7", "min7", "mi7"], 'Function': ["1", "b3", "5", "b7"]},
-    'Minor major seventh': {'Symbols': ["mΔ", "-Δ", "minΔ", "miΔ", "minMaj7", "mMaj7"], 'Function': ["1", "b3", "5", "7"]},
-    'Dominant seventh': {'Symbols': ["7", "dom7"], 'Function': ["1", "3", "5", "b7"]},
-    'Major seventh': {'Symbols': ["Δ", "Maj7", "Ma7", "M7"], 'Function': ["1", "3", "5", "7"]},
-    'Major seventh raised fifth': {'Symbols': ["Δ+", "Δ#5", "Maj7#5", "Maj7+"], 'Function': ["1", "3", "#5", "7"]},
-    'Altered dominant': {'Symbols': ["7+", "7#5", "7alt"], 'Function': ["1", "3", "#5", "b7"]},
-    'Dominant with flattened fifth': {'Symbols': ["7b5"], 'Function': ["1", "3", "b5", "b7"]},
-    'Major seventh with flattened fifth': {'Symbols': ["Δb5", "Maj7b5"], 'Function': ["1", "3", "b5", "7"]},
+    'Diminished': {'Symbols': ['°', 'mb5', '-b5', 'dim'], 'Function': ['1', 'b3', 'b5'], 'PossibleVoicings': ['closed_triad']}, 
+    'Minor': {'Symbols': ['m', '-', 'min'], 'Function': ['1', 'b3', '5'], 'PossibleVoicings': ['closed_triad']}, 
+    'Major': {'Symbols': ['M', 'maj'], 'Function': ['1', '3', '5'], 'PossibleVoicings': ['closed_triad']}, 
+    'Augmented': {'Symbols': ['+', 'aug', '#5'], 'Function': ['1', '3', '#5'], 'PossibleVoicings': ['closed_triad']}, 
+    'sus2': {'Symbols': ['sus2'], 'Function': ['1', '2', '5'], 'PossibleVoicings': ['closed_triad']}, 
+    'sus4': {'Symbols': ['sus4'], 'Function': ['1', '4', '5'], 'PossibleVoicings': ['closed_triad']}, 
+    'Major (b5)': {'Symbols': ['(b5)', 'Mb5', 'Maj-5'], 'Function': ['1', '3', 'b5'], 'PossibleVoicings': ['closed_triad']}, 
+    'Diminished seventh': {'Symbols': ['°7', 'dim7'], 'Function': ['1', 'b3', 'b5', 'bb7'], 'PossibleVoicings': ['closed_4note', 'drop_2', 'drop_3', 'drop_2_and_4', 'drop_2_and_3']}, 
+    'Half diminished': {'Symbols': ['Ø', 'm7b5', '-7b5', 'min7b5', 'mi7b5'], 'Function': ['1', 'b3', 'b5', 'b7'], 'PossibleVoicings': ['closed_4note', 'drop_2', 'drop_3', 'drop_2_and_4', 'drop_2_and_3']}, 
+    'Minor seventh': {'Symbols': ['m7', '-7', 'min7', 'mi7'], 'Function': ['1', 'b3', '5', 'b7'], 'PossibleVoicings': ['closed_4note', 'drop_2', 'drop_3', 'drop_2_and_4', 'drop_2_and_3']}, 
+    'Minor major seventh': {'Symbols': ['mΔ', '-Δ', 'minΔ', 'miΔ', 'minMaj7', 'mMaj7'], 'Function': ['1', 'b3', '5', '7'], 'PossibleVoicings': ['closed_4note', 'drop_2', 'drop_3', 'drop_2_and_4', 'drop_2_and_3']}, 
+    'Dominant seventh': {'Symbols': ['7', 'dom7'], 'Function': ['1', '3', '5', 'b7'], 'PossibleVoicings': ['closed_4note', 'drop_2', 'drop_3', 'drop_2_and_4', 'drop_2_and_3']}, 
+    'Major seventh': {'Symbols': ['Δ', 'Maj7', 'Ma7', 'M7'], 'Function': ['1', '3', '5', '7'], 'PossibleVoicings': ['closed_4note', 'drop_2', 'drop_3', 'drop_2_and_4', 'drop_2_and_3']}, 
+    'Major seventh raised fifth': {'Symbols': ['Δ+', 'Δ#5', 'Maj7#5', 'Maj7+'], 'Function': ['1', '3', '#5', '7'], 'PossibleVoicings': ['closed_4note', 'drop_2', 'drop_3', 'drop_2_and_4', 'drop_2_and_3']}, 
+    'Altered dominant': {'Symbols': ['7+', '7#5', '7alt'], 'Function': ['1', '3', '#5', 'b7'], 'PossibleVoicings': ['closed_4note', 'drop_2', 'drop_3', 'drop_2_and_4', 'drop_2_and_3']}, 
+    'Dominant with flattened fifth': {'Symbols': ['7b5'], 'Function': ['1', '3', 'b5', 'b7'], 'PossibleVoicings': ['closed_4note', 'drop_2', 'drop_3', 'drop_2_and_4', 'drop_2_and_3']}, 
+    'Major seventh with flattened fifth': {'Symbols': ['Δb5', 'Maj7b5'], 'Function': ['1', '3', 'b5', '7'], 'PossibleVoicings': ['closed_4note', 'drop_2', 'drop_3', 'drop_2_and_4', 'drop_2_and_3']}, 
+    'Dominant thirteenth': {'Symbols': ['13', 'dom13'], 'Function': ['1', '3', '5', 'b7', '9', '11', '13'], 'PossibleVoicings': ['drop_2_and_4', 'drop_2_and_3']}, 
+    'Major thirteenth': {'Symbols': ['Maj13', 'Δ13'], 'Function': ['1', '3', '5', '7', '9', '11', '13'], 'PossibleVoicings': ['drop_2_and_4', 'drop_2_and_3']}, 
+    'Minor thirteenth': {'Symbols': ['m13', '-13', 'min13'], 'Function': ['1', 'b3', '5', 'b7', '9', '11', '13'], 'PossibleVoicings': ['drop_2_and_4', 'drop_2_and_3']}, 
+    'Half-diminished thirteenth': {'Symbols': ['m7b5/13', 'Ø13'], 'Function': ['1', 'b3', 'b5', 'b7', '9', '11', '13'], 'PossibleVoicings': ['drop_2_and_4', 'drop_2_and_3']}, 
+    'Diminished thirteenth': {'Symbols': ['dim13', '°13'], 'Function': ['1', 'b3', 'b5', 'bb7', '9', '11', '13'], 'PossibleVoicings': ['drop_2_and_4', 'drop_2_and_3']}, 
+    'Dominant eleventh': {'Symbols': ['11', 'dom11'], 'Function': ['1', '3', '5', 'b7', '9', '11'], 'PossibleVoicings': ['drop_2_and_4', 'drop_2_and_3']}, 
+    'Major eleventh': {'Symbols': ['Maj11', 'Δ11'], 'Function': ['1', '3', '5', '7', '9', '11'], 'PossibleVoicings': ['drop_2_and_4', 'drop_2_and_3']}, 
+    'Minor eleventh': {'Symbols': ['m11', '-11', 'min11'], 'Function': ['1', 'b3', '5', 'b7', '9', '11'], 'PossibleVoicings': ['drop_2_and_4', 'drop_2_and_3']}, 
+    'Suspended ninth': {'Symbols': ['sus9'], 'Function': ['1', '4', '5', 'b7', '9'], 'PossibleVoicings': ['drop_2_and_4', 'drop_2_and_3']}, 
+    'Dominant flat nine': {'Symbols': ['7♭9'], 'Function': ['1', '3', '5', 'b7', 'b9'], 'PossibleVoicings': ['drop_2_and_4', 'drop_2_and_3']}, 
+    'Dominant sharp nine': {'Symbols': ['7♯9'], 'Function': ['1', '3', '5', 'b7', '#9'], 'PossibleVoicings': ['drop_2_and_4', 'drop_2_and_3']}, 
+    'Dominant flat thirteen': {'Symbols': ['7♭13'], 'Function': ['1', '3', '5', 'b7', 'b13'], 'PossibleVoicings': ['drop_2_and_4', 'drop_2_and_3']}, 
+    'Dominant sharp thirteen': {'Symbols': ['7♯13'], 'Function': ['1', '3', '5', 'b7', '#13'], 'PossibleVoicings': ['drop_2_and_4', 'drop_2_and_3']}, 
+    'Fully altered dominant': {'Symbols': ['7alt', '7♭9♯9♯5♭5'], 'Function': ['1', '3', '#5', 'b7', 'b9', '#9'], 'PossibleVoicings': ['drop_2_and_4', 'drop_2_and_3']}, 
+    'Diminished ninth': {'Symbols': ['dim9', '°9'], 'Function': ['1', 'b3', 'b5', 'bb7', '9'], 'PossibleVoicings': ['drop_2_and_4', 'drop_2_and_3']}, 
+    'Quartal triad': {'Symbols': ['quartal'], 'Function': ['1', '4', '7'], 'PossibleVoicings': ['closed_triad']}, 
+    'Polychord': {'Symbols': ['C/G', 'D/F#'], 'Function': ['Two triads played together (e.g., C major with G major)'], 'PossibleVoicings': []}, 
+    'Cluster chord': {'Symbols': ['cluster'], 'Function': ["Adjacent notes (e.g., 'C-D-E')"], 'PossibleVoicings': []}, 
+    'Major sixth': {'Symbols': ['6', 'Maj6'], 'Function': ['1', '3', '5', '6'], 'PossibleVoicings': ['closed_4note', 'drop_2', 'drop_3', 'drop_2_and_4', 'drop_2_and_3']}, 
+    'Minor sixth': {'Symbols': ['m6', '-6', 'min6'], 'Function': ['1', 'b3', '5', '6'], 'PossibleVoicings': ['closed_4note', 'drop_2', 'drop_3', 'drop_2_and_4', 'drop_2_and_3']}, 
+    'Add9': {'Symbols': ['add9'], 'Function': ['1', '3', '5', '9'], 'PossibleVoicings': ['closed_4note', 'drop_2', 'drop_3', 'drop_2_and_4', 'drop_2_and_3']}, 
+    'Add11': {'Symbols': ['add11'], 'Function': ['1', '3', '5', '11'], 'PossibleVoicings': ['closed_4note', 'drop_2', 'drop_3', 'drop_2_and_4', 'drop_2_and_3']}, 
+    'Slash chord': {'Symbols': ['C/E', 'G/B'], 'Function': ["Specify a non-root bass note (e.g., 'C/E' means C major chord with E in the bass)"], 'PossibleVoicings': []}, 
+    'Minor ninth': {'Symbols': ['min9', '-9'], 'Function': ['1', 'b3', '5', 'b7', '9'], 'PossibleVoicings': ['drop_2_and_4', 'drop_2_and_3']}, 
+    'Dominant minor ninth': {'Symbols': ['7b9'], 'Function': ['1', '3', '5', 'b7', 'b9'], 'PossibleVoicings': ['drop_2_and_4', 'drop_2_and_3']}
 }
 
+#service functions
 
-chord_types["Dominant thirteenth"] = {
-    "Symbols": ["13", "dom13"],
-    "Function": ["1", "3", "5", "b7", "9", "11", "13"]
-}
+def get_chord_types():
+    chords = list(chord_types.keys())
+    return chords
 
-chord_types["Major thirteenth"] = {
-    "Symbols": ["Maj13", "Δ13"],
-    "Function": ["1", "3", "5", "7", "9", "11", "13"]
-}
+def get_chord_intervals(chord):
+    return chord_types[chord]["Function"]
+     
 
-chord_types["Minor thirteenth"] = {
-    "Symbols": ["m13", "-13", "min13"],
-    "Function": ["1", "b3", "5", "b7", "9", "11", "13"]
-}
+def get_chord_Symbols(chord):
+    return chord_types[chord]["Symbols"]
 
-chord_types["Half-diminished thirteenth"] = {
-    "Symbols": ["m7b5/13", "Ø13"],
-    "Function": ["1", "b3", "b5", "b7", "9", "11", "13"]
-}
-
-chord_types["Diminished thirteenth"] = {
-    "Symbols": ["dim13", "°13"],
-    "Function": ["1", "b3", "b5", "bb7", "9", "11", "13"]
-}
-
-chord_types.update({
-    # Extended Chords
-    "Dominant eleventh": {
-        "Symbols": ["11", "dom11"],
-        "Function": ["1", "3", "5", "b7", "9", "11"]
-    },
-    "Major eleventh": {
-        "Symbols": ["Maj11", "Δ11"],
-        "Function": ["1", "3", "5", "7", "9", "11"]
-    },
-    "Minor eleventh": {
-        "Symbols": ["m11", "-11", "min11"],
-        "Function": ["1", "b3", "5", "b7", "9", "11"]
-    },
-    "Suspended ninth": {
-        "Symbols": ["sus9"],
-        "Function": ["1", "4", "5", "b7", "9"]
-    },
-    
-    # Altered Chords
-    "Dominant flat nine": {
-        "Symbols": ["7♭9"],
-        "Function": ["1", "3", "5", "b7", "b9"]
-    },
-    "Dominant sharp nine": {
-        "Symbols": ["7♯9"],
-        "Function": ["1", "3", "5", "b7", "#9"]
-    },
-    "Dominant flat thirteen": {
-        "Symbols": ["7♭13"],
-        "Function": ["1", "3", "5", "b7", "b13"]
-    },
-    "Dominant sharp thirteen": {
-        "Symbols": ["7♯13"],
-        "Function": ["1", "3", "5", "b7", "#13"]
-    },
-    "Fully altered dominant": {
-        "Symbols": ["7alt", "7♭9♯9♯5♭5"],
-        "Function": ["1", "3", "#5", "b7", "b9", "#9"]
-    },
-
-    # Diminished Variations
-    "Diminished ninth": {
-        "Symbols": ["dim9", "°9"],
-        "Function": ["1", "b3", "b5", "bb7", "9"]
-    },
-
-    # Quartal Chords
-    "Quartal triad": {
-        "Symbols": ["quartal"],
-        "Function": ["1", "4", "7"]
-    },
-
-    # Polychords
-    "Polychord": {
-        "Symbols": ["C/G", "D/F#"],
-        "Function": ["Two triads played together (e.g., C major with G major)"]
-    },
-
-    # Cluster Chords
-    "Cluster chord": {
-        "Symbols": ["cluster"],
-        "Function": ["Adjacent notes (e.g., 'C-D-E')"]
-    },
-
-    # Sixth Chords
-    "Major sixth": {
-        "Symbols": ["6", "Maj6"],
-        "Function": ["1", "3", "5", "6"]
-    },
-    "Minor sixth": {
-        "Symbols": ["m6", "-6", "min6"],
-        "Function": ["1", "b3", "5", "6"]
-    },
-
-    # Add Chords
-    "Add9": {
-        "Symbols": ["add9"],
-        "Function": ["1", "3", "5", "9"]
-    },
-    "Add11": {
-        "Symbols": ["add11"],
-        "Function": ["1", "3", "5", "11"]
-    },
-
-    # Slash Chords
-    "Slash chord": {
-        "Symbols": ["C/E", "G/B"],
-        "Function": ["Specify a non-root bass note (e.g., 'C/E' means C major chord with E in the bass)"]
-    }
-})
-
-chord_types["Minor ninth"] = {
-    "Symbols": ["min9", "-9"],
-    "Function": ["1", "b3", "5", "b7", "9"]
-}
-
-chord_types["Dominant minor ninth"] = {
-    "Symbols": ["7b9"],
-    "Function": ["1", "3", "5", "b7", "b9"]
-}
 
 
 chromatic_scale_sharp = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
@@ -321,7 +262,7 @@ def chord_with_inversions(chord_type, key, octave, chord_types):
         root_pitch = int(result['chord_notes'][0][1]) 
     else:
         root_pitch = int(result['chord_notes'][0][2])
-    print(root_pitch)
+    #print(root_pitch)
     inversions = generate_inversions(stripNotes, root_pitch, chord_type='major')
     result['Inverions'] = inversions
     """
@@ -337,3 +278,4 @@ octave = 4
 
 print(chord_with_inversions(chord_type, key, octave, chord_types))
 """
+
