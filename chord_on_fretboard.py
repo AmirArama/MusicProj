@@ -1,3 +1,4 @@
+from collections import defaultdict
 from chord_positions import *
 from chord_types import *
 from chord_coordinates import find_coordinates
@@ -15,6 +16,28 @@ from chord_frequency import *
 
 chromatic_scale_sharp = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
 freq_list = create_frequency_dic(chromatic_scale_sharp)
+
+
+"""
+    Objects are made immutable to ensure consistent hash values, 
+    enabling efficient and reliable uniqueness checks in hash-based 
+    collections like sets or dictionaries.
+"""
+from collections import OrderedDict
+def make_immutable(obj):
+    """Recursively convert mutable objects to immutable equivalents, preserving order."""
+    if isinstance(obj, dict):
+        # Convert dict to tuple of ordered key-value pairs
+        return tuple((k, make_immutable(v)) for k, v in obj.items())
+    elif isinstance(obj, list):
+        # Convert list to tuple
+        return tuple(make_immutable(item) for item in obj)
+    elif isinstance(obj, tuple):
+        # Convert each element of the tuple
+        return tuple(make_immutable(item) for item in obj)
+    else:
+        # Leave immutable objects (str, int, float, etc.) as they are
+        return obj
 
 #Create a name usable for javascript
 def process_note_name(note):
@@ -62,9 +85,12 @@ def find_inversions_positions(the_chord, string_set):
         found_position = True
         for note, string_ in zip(inversion_r, string_set) :
             
+            
             note_name = note[0]
             note_pitch = note[1]
             frets = []
+            #if string_set == [4,5,6]:
+                #print(note_pitch)
 
             if "b" in note_name:
                 frets = [(fret,note_name+str(note_pitch)) for fret, n in enumerate(notes_22frets_flat['string'+str(string_)]) if n[0] == note_name and n[1] == str(note_pitch)]
@@ -74,6 +100,8 @@ def find_inversions_positions(the_chord, string_set):
             if not frets:
                 found_position = False
             else:
+                #if string_set == [4,5,6]:
+                #    print(notes_22frets_flat)
                 x , y = find_coordinates(str(string_), str(frets[0][0]))
                 positions.append({
                     "string":string_,
@@ -97,7 +125,7 @@ def find_inversions_positions(the_chord, string_set):
 
 
 
-chord_type = "Minor"
+chord_type = "Major"
 key = "C"
 octave = 3
 
@@ -118,19 +146,76 @@ def find_all_key_chords_with_inversions(chord_type, key):
     voicings = chord_voicings[voicings_name]
     
     all_notes_all_inversions = []
+    unique_items = set()
+
     list_of_the_note_positions = get_a_note_on_fterboard(key)
+    print(list_of_the_note_positions)
     set_of_objects = 1
+    num_of_inversions = 0
     for i, pose in enumerate(list_of_the_note_positions):
         #print(pose)
         octave = int(pose["octave"])
         #print(chord_type,key,octave,voicings)
         the_chord = chord_with_inversions(chord_type, key, octave, chord_types)
         for voicing in voicings:
+            """
+            if pose["string"] in voicing:
+                #print(voicing,pose)
+                #print(voicing,"add")
+                pass
+            else:
+                #print("skip")
+                continue
+            """
             inversions = find_inversions_positions(the_chord, voicing)
-            all_notes_all_inversions.append(inversions)
+            if inversions["fb_inversion_1"] == "None" and inversions["fb_inversion_2"] == "None" and inversions["fb_inversion_3"] == "None":
+                continue 
+            data = make_immutable(inversions)
+            if data not in unique_items:
+                unique_items.add(data)
+                #print("Added to unique items")
+                all_notes_all_inversions.append(inversions)        
+            #else:
+                #print("Duplicate found!")   
+            #if inversions["fb_inversion_1"] != "None":
+            #    num_of_inversions += 1
+            
+            #print("~o"*30)
+            #print(inversions)
+            #print("~o"*30)
             set_of_objects = set_of_objects + 1
-    return all_notes_all_inversions
+    #print("inv num = ",num_of_inversions)
+    all_notes_all_inversions2 = {} 
+    for voicing in voicings:
+
+        string_key = "_".join(map(str, voicing))  # Convert each element to a string and join with "_"
+        x = all_notes_all_inversions2[string_key] = {}
+        x['inversion1'] = []
+        x['inversion2'] = []
+        x['inversion3'] = []
+        x['inversion4'] = []
+        for idx,val in enumerate(all_notes_all_inversions):
+            if val['string set'] == voicing: 
+                for idx2 in range(5):
+                    iver = "fb_inversion_"+str(idx2)
+                    if iver in val:
+                        if val[iver] != "None":
+                            x['inversion'+str(idx2)].append(val[iver])    
+    
+
+    return all_notes_all_inversions2
 
 c = find_all_key_chords_with_inversions(chord_type, key)
 
-print(c)
+from pprint import pprint
+#pprint(c)
+    
+def find_all_key_chords_with_inversions_immutable(chord_type, key):
+    data = find_all_key_chords_with_inversions(chord_type, key)
+    return make_immutable(data)
+
+#c = find_all_key_chords_with_inversions_immutable(chord_type, key)
+from pprint import pprint
+
+#pprint(c)
+#print(c)

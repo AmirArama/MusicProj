@@ -270,12 +270,45 @@ def chord_with_inversions(chord_type, key, octave, chord_types):
         print(f"Inversion {idx + 1}: {inversion}")
     """
     return result
+
+
+
 """
+    Objects are made immutable to ensure consistent hash values, 
+    enabling efficient and reliable uniqueness checks in hash-based 
+    collections like sets or dictionaries.
+"""
+from collections import OrderedDict
+def make_immutable(obj):
+    """Recursively convert mutable objects to immutable equivalents, preserving order."""
+    if isinstance(obj, dict):
+        # Convert dict to tuple of ordered key-value pairs
+        return tuple((k, make_immutable(v)) for k, v in obj.items())
+    elif isinstance(obj, list):
+        # Convert list to tuple
+        return tuple(make_immutable(item) for item in obj)
+    elif isinstance(obj, tuple):
+        # Convert each element of the tuple
+        return tuple(make_immutable(item) for item in obj)
+    else:
+        # Leave immutable objects (str, int, float, etc.) as they are
+        return obj
+
+
+
 # Example usage
 chord_type = "Major"
 key = "G"
 octave = 4
 
-print(chord_with_inversions(chord_type, key, octave, chord_types))
-"""
+
+#print(chord_with_inversions(chord_type, key, octave, chord_types))
+
+def chord_with_inversions_immutable(chord_type, key, octave, chord_types):
+    data = chord_with_inversions(chord_type, key, octave, chord_types)
+    #print(data)
+    return make_immutable(data)
+
+
+#print(chord_with_inversions_immutable(chord_type, key, octave, chord_types))
 

@@ -71,12 +71,12 @@ notes_22frets_flat = generate_strings_notes_22frets("flat")
 def rearange_the_fretbpard_dic(old_presentation):
     x_keys = list(old_presentation.keys())
     x_values = list(old_presentation.values())
-    notes_22frets_flat_r = []
+    notes_22frets_r = []
     for i,string in enumerate(x_keys):
         #print(i,string)
         #print(x_values[i])
         for j,note in enumerate(x_values[i]):
-            notes_22frets_flat_r.append(
+            notes_22frets_r.append(
                 {
                     "string":i+1,
                     "fret": j,
@@ -84,11 +84,37 @@ def rearange_the_fretbpard_dic(old_presentation):
                     "octave": note[1]
                 }
             )
-    return notes_22frets_flat_r
+    return notes_22frets_r
         
 notes_22frets_sharp_r = rearange_the_fretbpard_dic(notes_22frets_sharp)
 notes_22frets_flat_r = rearange_the_fretbpard_dic(notes_22frets_flat)
 
+# A Sneaky Bug Fix
+# In some cases, the first inversion found on the fretboard is not the root inversion. 
+# This happens when the notes needed to build the root inversion are missing on the fretboard. 
+# As a result, it becomes impossible to produce and position subsequent inversions correctly.
+# 
+# By supplying virtual notes outside the physical fretboard range, we address this issue, 
+# ensuring that all inversions can be calculated and placed properly.
+
+fake_notes_sharp = [
+    # Virtual notes for octave 2 on lower strings
+    {'string': 6, 'fret': -1, 'note': 'C', 'octave': '2'},
+    {'string': 6, 'fret': -1, 'note': 'C#', 'octave': '2'},
+    {'string': 6, 'fret': -1, 'note': 'D', 'octave': '2'},
+    {'string': 6, 'fret': -1, 'note': 'D#', 'octave': '2'}
+]
+fake_notes_flat = [
+    # Virtual notes for octave 2 on lower strings
+    {'string': 6, 'fret': -1, 'note': 'C', 'octave': '2'},
+    {'string': 6, 'fret': -1, 'note': 'Db', 'octave': '2'},
+    {'string': 6, 'fret': -1, 'note': 'D', 'octave': '2'},
+    {'string': 6, 'fret': -1, 'note': 'Eb', 'octave': '2'}
+]
+notes_22frets_sharp_r = notes_22frets_sharp_r + fake_notes_sharp
+notes_22frets_flat_r = notes_22frets_flat_r + fake_notes_flat
+
+#print("aaaaaaaa"*20)
 #print (notes_22frets_flat_r)
 
 def get_a_note_on_fterboard(note):
@@ -101,5 +127,5 @@ def get_a_note_on_fterboard(note):
             fnotes.append(idx)
     return fnotes
 
-enote = get_a_note_on_fterboard("E")
-print(enote)
+#enote = get_a_note_on_fterboard("E")
+#print(enote)
