@@ -137,11 +137,36 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(data => {
                     fetchedData = data; // Store fetched data globally
                     console.log(data)
+                    populateStringSetDropdown(fetchedData); // Populate the String Set dropdown
                     filterAndRenderFretboard(); // Render fretboard with default filters
                 })
                 .catch(error => console.error("Error fetching chord data:", error));
         }
     };
+    const populateStringSetDropdown = (fetchedData) => {
+    const stringSetDropdown = document.getElementById("stringSetDropdown");
+
+    // Clear existing options
+    stringSetDropdown.innerHTML = '';
+
+    // Add an "All" option at the top
+    const allOption = document.createElement("option");
+    allOption.value = "All";
+    allOption.textContent = "All";
+    stringSetDropdown.appendChild(allOption);
+
+    // Populate dropdown with keys from fetchedData
+    Object.keys(fetchedData).forEach(stringSet => {
+        const option = document.createElement("option");
+        option.value = stringSet;
+        option.textContent = stringSet; // Use the key as the label
+        stringSetDropdown.appendChild(option);
+    });
+
+    // Set the default selection (optional)
+    stringSetDropdown.value = "All";
+};
+
 
     // Function to filter and render the fretboard
     const filterAndRenderFretboard = () => {
