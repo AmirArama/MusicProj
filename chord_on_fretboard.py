@@ -188,19 +188,28 @@ def find_all_key_chords_with_inversions(chord_type, key):
     all_notes_all_inversions2 = {} 
     for voicing in voicings:
 
-        string_key = "_".join(map(str, voicing))  # Convert each element to a string and join with "_"
+        string_key = "".join(map(str, voicing))  # Convert each element to a string and join with "_"
         x = all_notes_all_inversions2[string_key] = {}
-        x['inversion1'] = []
-        x['inversion2'] = []
-        x['inversion3'] = []
-        x['inversion4'] = []
+        x['root'] = []
+        x['1stInversion'] = []
+        x['2ndInvrsion'] = []
+        x['3rdInversion'] = []
         for idx,val in enumerate(all_notes_all_inversions):
             if val['string set'] == voicing: 
                 for idx2 in range(5):
                     iver = "fb_inversion_"+str(idx2)
                     if iver in val:
                         if val[iver] != "None":
-                            x['inversion'+str(idx2)].append(val[iver])    
+                            if idx2 == 1:
+                                x['root'].append(val[iver])  
+                            elif idx2 == 2:
+                                x['1stInversion'].append(val[iver])
+                            elif idx2 == 3:
+                                x['2ndInvrsion'].append(val[iver])
+                            elif idx2 == 4:
+                                x['3rdInversion'].append(val[iver])
+
+
     
 
     return all_notes_all_inversions2
