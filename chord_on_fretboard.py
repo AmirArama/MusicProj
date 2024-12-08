@@ -192,7 +192,7 @@ def find_all_key_chords_with_inversions(chord_type, key):
         x = all_notes_all_inversions2[string_key] = {}
         x['root'] = []
         x['1stInversion'] = []
-        x['2ndInvrsion'] = []
+        x['2ndInversion'] = []
         x['3rdInversion'] = []
         for idx,val in enumerate(all_notes_all_inversions):
             if val['string set'] == voicing: 
@@ -205,7 +205,7 @@ def find_all_key_chords_with_inversions(chord_type, key):
                             elif idx2 == 2:
                                 x['1stInversion'].append(val[iver])
                             elif idx2 == 3:
-                                x['2ndInvrsion'].append(val[iver])
+                                x['2ndInversion'].append(val[iver])
                             elif idx2 == 4:
                                 x['3rdInversion'].append(val[iver])
 
