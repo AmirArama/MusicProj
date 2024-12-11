@@ -12,6 +12,7 @@ from modes_pages_r import *
 from tenssions_pages import *
 from chord_types import get_chord_types
 from chord_on_fretboard import find_all_key_chords_with_inversions
+from fretboard_inversions import generate_all_inversions
 
 
 import os
@@ -123,7 +124,8 @@ def get_chord_data():
 
     print(note,chord)
 
-    c = find_all_key_chords_with_inversions(chord, note)
+    #c = find_all_key_chords_with_inversions(chord, note)
+    c = generate_all_inversions(chord, note)
 
      # Check JSON validity
     try:

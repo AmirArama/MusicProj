@@ -54,10 +54,10 @@
         <div class="col-md-2">
             <label for="inversionDropdown">Inversions</label>
             <select class="form-control" id="inversionDropdown" style="font-size: 1.3rem; font-weight: bold;">
-                <option value="root">root</option>
-                <option value="1stInversion">1stInversion</option>
-                <option value="2ndInversion">2ndInversion</option>
-                <option value="3rdInversion">3rdInversion</option>
+                <option value="root">Root</option>
+                <option value="inversion1">Inversion1</option>
+                <option value="inversion2">Inversion2</option>
+                <option value="inversion3">Inversion3</option>
                 <option value="All">All</option>
             </select>
         </div>
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Default filter parameters
     let selectedInversion = "root"; // Default inversion
-    let selectedStringSet = "123";         // Default string set
+    let selectedStringSet = "1_2_3";         // Default string set
     let selectedNoteInterval = "notes";    // Default view type (notes or intervals)
 
     // Function to fetch chord data
@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(response => response.json())
                 .then(data => {
                     fetchedData = data; // Store fetched data globally
-                    console.log(data)
+                    console.log("The Data ====== >>>",data)
                     populateStringSetDropdown(fetchedData); // Populate the String Set dropdown
                     filterAndRenderFretboard(); // Render fretboard with default filters
                 })
@@ -185,17 +185,21 @@ document.addEventListener("DOMContentLoaded", function () {
         const stringSets = selectedStringSet === "All"
             ? Object.keys(fetchedData) // Use all string sets if "All" is selected
             : [selectedStringSet];
-
         stringSets.forEach(stringSet => {
             // Handle "All" for Inversions or a specific inversion
             const inversions = selectedInversion === "All"
                 ? Object.keys(fetchedData[stringSet]) // Use all inversions
-                : [selectedInversion];
-
+                : [selectedInversion]; 
             // Combine data for the selected inversions
             inversions.forEach(inversion => {
-                if (fetchedData[stringSet][inversion]) {
-                    combinedData = combinedData.concat(fetchedData[stringSet][inversion].flat());
+                console.log("fetchedData[stringSet] -->",fetchedData[stringSet])
+                const dataList = fetchedData[stringSet];
+                const inversionData = fetchedData[stringSet][inversion];
+                console.log("fetchedData[stringSet][inversion] -->",inversionData)
+
+                if (inversionData) {
+                    combinedData = combinedData.concat(inversionData.flat());
+                    console.log("combinedData -->",combinedData)
                 }
             });
         });
@@ -203,7 +207,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Render combined data on the fretboard
         combinedData.forEach(noteData => {
             const noteElement = document.createElementNS("http://www.w3.org/2000/svg", "image");
-            const imageType = selectedNoteInterval === "intervals" ? noteData.interval : noteData.jsname;
+            const imageType = selectedNoteInterval === "intervals" ? noteData.interval : noteData.jsnote;
             noteElement.setAttribute("href", `/static/images/notes/note_${imageType}.png`);
             noteElement.setAttribute("x", x_offset + noteData.x - 50);
             noteElement.setAttribute("y", y_offset + noteData.y - 50);
@@ -218,7 +222,6 @@ document.addEventListener("DOMContentLoaded", function () {
             fretboard.appendChild(noteElement);
         });
     };
-
 
     // Event listener for chord buttons
     buttons.forEach(button => {

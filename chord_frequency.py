@@ -75,7 +75,6 @@ def create_frequency_dic(chromatic_scale):
             tmplist.append(ent)
     return tmplist
 
-"""
+
 x = create_frequency_dic(chromatic_scale_sharp)
 print(x)
-"""

@@ -121,21 +121,90 @@ def get_chord_Symbols(chord):
 
 
 
-chromatic_scale_sharp = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
-chromatic_scale_flat = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
 
-def build_chord(chord_type, key, octave, chord_definitions):
+chromatic_notes_flat = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
+chromatic_notes_sharp = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+
+"""
+    Searches for the index of a note in the chromatic notes (flat and sharp lists).
+
+"""
+def find_note_index(note):
+    if note in chromatic_notes_flat:
+        return chromatic_notes_flat.index(note)
+    elif note in chromatic_notes_sharp:
+        return chromatic_notes_sharp.index(note)
+    else:
+        return -1
+
+def generate_inversions(chord_notes, intervals, root_pitch, chord_type='major'):
     """
-    Build a chord based on the chord type, root key, and octave.
+    Generate chord inversions for a chord with any number of notes, producing results as lists of notes with their pitches.
+
+    Parameters:
+    chord_notes (list): List of notes in the chord (e.g., ['C', 'E', 'G', 'B']).
+    root_pitch (int): The pitch number of the root note (e.g., 4 for C4).
+
+    Returns:
+    list: List of inversions, each as a list of notes with their pitches (e.g., ['G4', 'C5', 'E3']).
+    """
+    # Initialize the root position
+    inversionDic = {}
+    inversionDicIn = {}
+    inversions = []
+    inversionsIn = []
+    pitches = [root_pitch]  # Start with the root pitch
+
+    # Assign pitches based on the chromatic scale and root note
+    root_index = find_note_index(chord_notes[0])  # Index of root in chromatic scale
+    for i in range(1, len(chord_notes)):
+        current_index = find_note_index(chord_notes[i])
+        # If the current note is "lower" in the chromatic scale, it wraps to the next octave
+        if current_index < find_note_index(chord_notes[i - 1]):
+            pitches.append(int(pitches[i - 1]) + 1)  # Move to the next octave
+        else:
+            pitches.append(int(pitches[i - 1]))  # Stay in the same octave
+
+    # Add the root position to inversions
+    inversions.append([f"{note}{pitch}" for note, pitch in zip(chord_notes, pitches)])
+    inversionDic['root'] = inversions[0]
+    inversionsIn.append(intervals)
+    inversionDic['root'] = intervals
+    print(inversionsIn)
+    for i in range(len(chord_notes) - 1):
+        # Move the first note up an octave
+        first_note, first_pitch = inversions[-1][0][:-1], int(inversions[-1][0][-1])  # Note and pitch of first note
+        rest_of_notes = inversions[-1][1:]  # Remaining notes
+        new_inversion = rest_of_notes + [f"{first_note}{first_pitch + 1}"]
+        inversions.append(new_inversion)
+        inversionDic['inversion'+str(i+1)] =  new_inversion
+
+        intervals = intervals[1:] + intervals[:1]
+        print(intervals)
+        #restIn = inversionsIn[-1][1:]
+        #newIn = restIn + firstIn
+        inversionsIn.append(intervals)
+    return inversions, inversionsIn
+
+
+
+# Example usage
+chord_type = "Diminished seventh"
+key = "C"
+octave = 4
+
+
+def build_chord(chord_type, key, chord_definitions):
+    """
+    Build a chord based on the chord type and root key without pitch.
     
     Args:
         chord_type (str): The type of chord (e.g., "Diminished").
         key (str): The root note (e.g., "E").
-        octave (int): The octave for the root note (e.g., 4).
         chord_definitions (dict): Dictionary with chord types, symbols, and functions.
         
     Returns:
-        dict: A dictionary with the chord name and the generated chord notes.
+        dict: A dictionary with the chord name and the generated chord notes (without pitch).
     """
     # Get the chord definition
     chord_data = chord_definitions.get(chord_type)
@@ -156,163 +225,96 @@ def build_chord(chord_type, key, octave, chord_definitions):
     # Find the root index in the chromatic scale
     root_index = scale.index(key)
 
-    # Build the chord
-    chord_notes = [key+str(octave)]
+    # Build the chord notes (without pitch)
+    chord_notes = [key]
     for interval in intervals:
         if interval == "1":
             continue
-        if "b" in interval:
-            scale = chromatic_scale_flat
-        else:
-            scale = chromatic_scale_sharp
 
+        # Choose the appropriate scale based on flat/sharp intervals
+        if "b" in interval:
+            scale = chromatic_notes_flat
+        else:
+            scale = chromatic_notes_sharp
 
         # Map the interval to semitones
         semitones = interval_to_semitones[interval]["semitones"]
         # Calculate the note index in the chromatic scale
         note_index = (root_index + semitones) % 12
-        # Calculate the octave shift
-        octave_shift = (root_index + semitones) // 12
-        # Append the note and octave
-        chord_notes.append(f"{scale[note_index]}{octave + octave_shift}")
+        # Append the note
+        chord_notes.append(scale[note_index])
 
-    # Determine the chord name using the first symbol, excluding the pitch
+    # Determine the chord name using the first symbol
     chord_symbol = chord_data["Symbols"][0]
     chord_name = f"{key}{chord_symbol}"
 
     return {"chord_name": chord_name, "chord_notes": chord_notes, "intervals": intervals}
 
-
-
-
-chromatic_notes_flat = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
-chromatic_notes_sharp = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
-
-"""
-    Searches for the index of a note in the chromatic notes (flat and sharp lists).
-
-"""
-def find_note_index(note):
-    if note in chromatic_notes_flat:
-        return chromatic_notes_flat.index(note)
-    elif note in chromatic_notes_sharp:
-        return chromatic_notes_sharp.index(note)
-    else:
-        return -1
-    
-
-def generate_inversions(chord_notes, root_pitch,chord_type='major'):
-    """
-    Generate chord inversions for a chord with any number of notes, accounting for chromatic scale.
-
-    Parameters:
-    chord_notes (list): List of notes in the chord (e.g., ['C', 'E', 'G', 'B']).
-    root_pitch (int): The pitch number of the root note (e.g., 4 for C4).
-
-    Returns:
-    list: List of inversions, each containing notes with their pitches.
-    """
-    
-    # Initialize the root position
-    inversions = []
-    pitches = [root_pitch]  # Start with the root pitch
-
-    # Assign pitches based on the chromatic scale and root note
-    root_index = find_note_index(chord_notes[0])  # Index of root in chromatic scale
-    for i in range(1, len(chord_notes)):
-        current_index = find_note_index(chord_notes[i])
-        # If the current note is "lower" in the chromatic scale, it wraps to the next octave
-        if current_index < find_note_index(chord_notes[i - 1]):
-            pitches.append(pitches[i - 1] + 1)  # Move to the next octave
-        else:
-            pitches.append(pitches[i - 1])  # Stay in the same octave
-
-    # Add the root position to inversions
-    inversions.append(list(zip(chord_notes, pitches)))
-
-    # Generate inversions by rotating the notes
-    for _ in range(len(chord_notes) - 1):
-        # Move the first note up an octave
-        first_note, first_pitch = inversions[-1][0]
-        rest_of_notes = inversions[-1][1:]  # Remaining notes
-        new_inversion = rest_of_notes + [(first_note, first_pitch + 1)]
-        inversions.append(new_inversion)
-
-    return inversions
-
-
-
-def strip_notes(chord):
-    clean_chord=[]
-    for note in chord:
-        if len(note) == 2:
-            clean_chord.append(note[0])
-        if len(note) > 2:
-            clean_chord.append(note[0]+note[1])
-    return clean_chord
-
 def chord_with_inversions(chord_type, key, octave, chord_types):
     result = {}
     result['Type'] = chord_type
-    the_chord = build_chord(chord_type, key, octave, chord_types)
-    #print("the chord",the_chord)
+    the_chord = build_chord(chord_type, key, chord_types)
     result.update(the_chord)
-    stripNotes = strip_notes(result['chord_notes'])
-    if len(result['chord_notes'][0]) == 2:
-        root_pitch = int(result['chord_notes'][0][1]) 
-    else:
-        root_pitch = int(result['chord_notes'][0][2])
-    #print(root_pitch)
-    inversions = generate_inversions(stripNotes, root_pitch, chord_type='major')
+    inversions, inversionsIn = generate_inversions(the_chord['chord_notes'], the_chord['intervals'], octave, chord_type='major')
     result['Inverions'] = inversions
-    """
-    for idx, inversion in enumerate(inversions):
-        print(f"Inversion {idx + 1}: {inversion}")
-    """
+    result['InverionsIntervals'] = inversionsIn
     return result
 
 
 
-"""
-    Objects are made immutable to ensure consistent hash values, 
-    enabling efficient and reliable uniqueness checks in hash-based 
-    collections like sets or dictionaries.
-"""
-from collections import OrderedDict
-def make_immutable(obj):
-    """Recursively convert mutable objects to immutable equivalents, preserving order."""
-    if isinstance(obj, dict):
-        # Convert dict to tuple of ordered key-value pairs
-        return tuple((k, make_immutable(v)) for k, v in obj.items())
-    elif isinstance(obj, list):
-        # Convert list to tuple
-        return tuple(make_immutable(item) for item in obj)
-    elif isinstance(obj, tuple):
-        # Convert each element of the tuple
-        return tuple(make_immutable(item) for item in obj)
-    else:
-        # Leave immutable objects (str, int, float, etc.) as they are
-        return obj
+
+from fretboard_map import get_note_data
+
+string = 5
+note_with_octave = 'G#3'
 
 
 
-# Example usage
-chord_type = "Major"
-key = "G"
-octave = 4
+
+def find_inversions_positions(the_chord, string_set):
+    #print(string_set)
+    
+    inversions_tmp = the_chord['Inverions']
+
+    # Reverse the inversions to make the root position on the bass.
+    inversions = []
+    for inversion in inversions_tmp:
+        inversions.append(inversion[::-1])
+
+    inversionsDic = {}
+    inversionsDic["string set"] = string_set
+    inversionsDic["Inverions"] = inversions
+
+    inversions_on_fretboard = {}
+    for idx,inversion in enumerate(inversions):
+        inversionf = True
+        inversion_on_fretboard = []
+        for string , note in zip(string_set,inversion):
+            note_on_fretboard = get_note_data(string-1,note)
+            if note_on_fretboard == None:
+                inversionf = False
+            else:
+                inversion_on_fretboard.append(note_on_fretboard)
+
+        if inversionf == True:
+            if idx == 0:  
+                inversions_on_fretboard['root'] = inversion_on_fretboard
+                print('root inversion found!')       
+            else:
+                inversions_on_fretboard['inversion'+str(idx)] = inversion_on_fretboard 
+                print('inversion'+str(idx)+' found!')       
+    if not inversions_on_fretboard:
+        return None
+
+    return inversions_on_fretboard
+
+from collections import defaultdict
 
 
-#print(chord_with_inversions(chord_type, key, octave, chord_types))
-
-def chord_with_inversions_immutable(chord_type, key, octave, chord_types):
-    data = chord_with_inversions(chord_type, key, octave, chord_types)
-    #print(data)
-    return make_immutable(data)
 
 
-print(chord_with_inversions_immutable(chord_type, key, octave, chord_types))
+y = chord_with_inversions(chord_type, key, octave, chord_types)
+print(y)
 
-x = build_chord(chord_type, key, octave, chord_types)
-
-print(x)
-
+#y = find_inversions_positions(y, [1,2,3])
+#print(y)

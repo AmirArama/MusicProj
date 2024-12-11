@@ -45,7 +45,6 @@ function updateFretboard(filteredData) {
     let x_offset = 200
     let y_offset = 100
     let size_offset = 50
-    console.log(filteredData)
     $('.fretboard-note').remove();
 
     // First Loop: Preload Images

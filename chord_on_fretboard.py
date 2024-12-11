@@ -124,7 +124,6 @@ def find_inversions_positions(the_chord, string_set):
     return inversionsDic
 
 
-
 chord_type = "Major"
 key = "C"
 octave = 3
@@ -214,17 +213,20 @@ def find_all_key_chords_with_inversions(chord_type, key):
 
     return all_notes_all_inversions2
 
-c = find_all_key_chords_with_inversions(chord_type, key)
-
-from pprint import pprint
-#pprint(c)
-    
-def find_all_key_chords_with_inversions_immutable(chord_type, key):
-    data = find_all_key_chords_with_inversions(chord_type, key)
-    return make_immutable(data)
-
-#c = find_all_key_chords_with_inversions_immutable(chord_type, key)
+#c = find_all_key_chords_with_inversions(chord_type, key)
 from pprint import pprint
 
-#pprint(c)
-#print(c)
+def find_inversions_positions_drop2(the_chord, string_set):
+    inversionsDic = find_inversions_positions(the_chord, string_set)
+    print(string_set)
+    string_set.pop(1)  # Removes the element at index 1 (2 in this case)
+    string_set.append(string_set[-1] + 1)  # Adds the last element + 1
+    pprint(string_set)
+
+chord_type = "Major seventh"
+key = "C"
+octave = 3
+
+the_chord = chord_with_inversions(chord_type, key, octave, chord_types)
+
+find_inversions_positions_drop2(the_chord, [1,2,3,4])
