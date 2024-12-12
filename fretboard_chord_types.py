@@ -31,6 +31,39 @@ interval_to_semitones = {
     "15": {"name": "double_octave", "semitones": 24},
 }
 
+interval_to_name = {
+    "1": "R",
+    "b2": "b_flat",
+    "2": "2",
+    "b3": "3_flat",
+    "3": "3",
+    "4": "4",
+    "#4": "4_sharp",
+    "b5": "5_flat",
+    "5": "5",
+    "#5": "5_flat",
+    "b6": "6_flat",
+    "6": "6",
+    "bb7": "7_flat_flat",
+    "#6": "6_sharp",
+    "b7": "7_flat",
+    "7": "7",
+    "8": "8",
+    "b9": "9_flat",
+    "9": "9",
+    "#9": "9_sharp",
+    "b10": "10_flat",
+    "10": "10",
+    "11": "11",
+    "#11": "11_sharp",
+    "12": "12",
+    "b13": "13_flat",
+    "13": "13",
+    "b14": "14_flat",
+    "14": "14",
+    "15": "15"
+}
+
 chord_voicings = {
     "closed_triad": [
         [1, 2, 3],  # Strings 1, 2, and 3
@@ -275,11 +308,17 @@ def find_inversions_positions(the_chord, string_set):
     #print(string_set)
     
     inversions_tmp = the_chord['Inverions']
+    inversionsIn_tmp = the_chord['InverionsIntervals']
 
     # Reverse the inversions to make the root position on the bass.
     inversions = []
     for inversion in inversions_tmp:
         inversions.append(inversion[::-1])
+
+    #Do the same for the interval Inversions: Reverse the inversions to make the root position on the bass.
+    inversionsIn = []
+    for inversionIn in inversionsIn_tmp:
+        inversionsIn.append(inversionIn[::-1])
 
     inversionsDic = {}
     inversionsDic["string set"] = string_set
@@ -287,6 +326,7 @@ def find_inversions_positions(the_chord, string_set):
 
     inversions_on_fretboard = {}
     for idx,inversion in enumerate(inversions):
+        print(inversionsIn[idx])
         inversionf = True
         inversion_on_fretboard = []
         for string , note in zip(string_set,inversion):
@@ -297,12 +337,17 @@ def find_inversions_positions(the_chord, string_set):
                 inversion_on_fretboard.append(note_on_fretboard)
 
         if inversionf == True:
+            for  idx2 in range(len(inversion_on_fretboard)):
+                inversion_on_fretboard[idx2]["interval"] = inversionsIn[idx][idx2] 
+                inversion_on_fretboard[idx2]["jsinterval"] = interval_to_name[inversionsIn[idx][idx2]]
             if idx == 0:  
                 inversions_on_fretboard['root'] = inversion_on_fretboard
                 print('root inversion found!')       
             else:
                 inversions_on_fretboard['inversion'+str(idx)] = inversion_on_fretboard 
-                print('inversion'+str(idx)+' found!')       
+                print('inversion'+str(idx)+' found!')   
+            
+                  
     if not inversions_on_fretboard:
         return None
 
@@ -314,7 +359,7 @@ from collections import defaultdict
 
 
 y = chord_with_inversions(chord_type, key, octave, chord_types)
-print(y)
-
-#y = find_inversions_positions(y, [1,2,3])
 #print(y)
+
+y = find_inversions_positions(y, [1,2,3])
+print(y)

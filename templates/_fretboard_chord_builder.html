@@ -207,7 +207,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Render combined data on the fretboard
         combinedData.forEach(noteData => {
             const noteElement = document.createElementNS("http://www.w3.org/2000/svg", "image");
-            const imageType = selectedNoteInterval === "intervals" ? noteData.interval : noteData.jsnote;
+            const imageType = selectedNoteInterval === "intervals" ? noteData.jsinterval : noteData.jsnote;
             noteElement.setAttribute("href", `/static/images/notes/note_${imageType}.png`);
             noteElement.setAttribute("x", x_offset + noteData.x - 50);
             noteElement.setAttribute("y", y_offset + noteData.y - 50);
