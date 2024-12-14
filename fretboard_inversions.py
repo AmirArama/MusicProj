@@ -26,7 +26,8 @@ def process_nested_structure(data, group_order=None):
                 for key, value in item.items():
                     grouped_data[key].append(value)  # Group by 'root', 'inversion1', etc.
             else:
-                print(f"Skipping non-dictionary item in group '{string_set}': {item}")
+                pass
+                #print(f"Skipping non-dictionary item in group '{string_set}': {item}")
 
         # Sort grouped data based on group_order
         sorted_group = []
@@ -62,14 +63,16 @@ def process_nested_structure(data, group_order=None):
 
 
 
-def generate_all_inversions(chord_name,key):
+def generate_all_inversions(chord_name,key, applyD2, applyD3, applyD24):
+
+    print("applyD2=",applyD2, "applyD3=",applyD3, "applyD24=",applyD24)
 
     chord_info = chord_types[chord_name]
     voicings_name = chord_info['PossibleVoicings'][0]
     voicings = chord_voicings[voicings_name]
     #print(chord_info)
 
-    y = chord_with_inversions(chord_name, key, 3, chord_types)
+    #y = chord_with_inversions(chord_name, key, 3, chord_types)
     #print(y)
 
 
@@ -79,29 +82,29 @@ def generate_all_inversions(chord_name,key):
     for key_ in keys:
         if key_[1][-1] not in listOfPitch: 
             listOfPitch.append(key_[1][-1])
-    print(listOfPitch) 
+    #print(listOfPitch) 
 
     availableChords = {}
     for pitch in listOfPitch:
-        availableChords[key+pitch] = chord_with_inversions(chord_name, key, pitch, chord_types)
+        availableChords[key+pitch] = chord_with_inversions(chord_name, key, pitch, chord_types, applyD2, applyD3, applyD24)
 
     finalInversionMap = {}
     for voicing in voicings:
-        print(voicing)
+        #print(voicing)
         InvList = []
         for chord in availableChords.values():
             x = find_inversions_positions(chord, voicing)
             if x != None:
-                print(x)
+                #print(x)
                 InvList.append(x)
         k = "_".join(map(str, voicing))
-        print(k)
+        #print(k)
         finalInversionMap[k] = InvList
         #print(voicing)
 
     return process_nested_structure(finalInversionMap)
 
-x = generate_all_inversions("Major",'C')
+#x = generate_all_inversions("Major",'C')
 
 #from pprint import pprint
 #pprint(x)

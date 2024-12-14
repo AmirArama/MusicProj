@@ -170,7 +170,7 @@ def find_note_index(note):
     else:
         return -1
 
-def generate_inversions(chord_notes, intervals, root_pitch, chord_type='major'):
+def generate_inversions(chord_notes, intervals, root_pitch, applyD2, applyD3, applyD24, chord_type='major'):
     """
     Generate chord inversions for a chord with any number of notes, producing results as lists of notes with their pitches.
 
@@ -181,6 +181,9 @@ def generate_inversions(chord_notes, intervals, root_pitch, chord_type='major'):
     Returns:
     list: List of inversions, each as a list of notes with their pitches (e.g., ['G4', 'C5', 'E3']).
     """
+
+    print("in here drops = ",applyD2, applyD3, applyD24)
+
     # Initialize the root position
     inversionDic = {}
     inversionDicIn = {}
@@ -203,7 +206,7 @@ def generate_inversions(chord_notes, intervals, root_pitch, chord_type='major'):
     inversionDic['root'] = inversions[0]
     inversionsIn.append(intervals)
     inversionDic['root'] = intervals
-    print(inversionsIn)
+    #print(inversionsIn)
     for i in range(len(chord_notes) - 1):
         # Move the first note up an octave
         first_note, first_pitch = inversions[-1][0][:-1], int(inversions[-1][0][-1])  # Note and pitch of first note
@@ -213,10 +216,48 @@ def generate_inversions(chord_notes, intervals, root_pitch, chord_type='major'):
         inversionDic['inversion'+str(i+1)] =  new_inversion
 
         intervals = intervals[1:] + intervals[:1]
-        print(intervals)
+        #print(intervals)
         #restIn = inversionsIn[-1][1:]
         #newIn = restIn + firstIn
         inversionsIn.append(intervals)
+
+    if applyD2:
+        for idx in range(len(inversions)):
+            if len(inversions[idx]) > 3:  # Ensure there are enough notes to apply drop 2
+                # Drop 2 transformation for notes
+                second_highest_note = inversions[idx][-2][:-1]  # Note name of second highest note
+                second_highest_pitch = int(inversions[idx][-2][-1])  # Pitch of second highest note
+                dropped_note = f"{second_highest_note}{second_highest_pitch - 1}"
+                # Adjust the inversion to reflect the dropped note
+                inversions[idx] = [dropped_note] + inversions[idx][:-2] + [inversions[idx][-1]]
+        
+        for idx2 in range(len(inversionsIn)):
+            if len(inversions[idx2]) > 3:
+                #print("---->", inversionsIn[idx2])
+
+                c = [inversionsIn[idx2][2], inversionsIn[idx2][0], inversionsIn[idx2][1] ,inversionsIn[idx2][3]]
+                inversionsIn[idx2] = c
+                #print("---->", inversionsIn[idx2])
+
+    if applyD3:
+        for idx in range(len(inversions)):
+            if len(inversions[idx]) > 3:  # Ensure there are enough notes to apply drop 3
+                # Drop 3 transformation for notes
+                third_highest_note = inversions[idx][-3][:-1]  # Note name of third-highest note
+                third_highest_pitch = int(inversions[idx][-3][-1])  # Pitch of third-highest note
+                dropped_note = f"{third_highest_note}{third_highest_pitch - 1}"
+                # Adjust the inversion to reflect the dropped note
+                inversions[idx] = [dropped_note] + inversions[idx][:-3] + inversions[idx][-2:]
+
+        for idx2 in range(len(inversionsIn)):
+            if len(inversions[idx2]) > 3:  # Ensure there are enough intervals for drop 3
+                print("Before Drop 3:", inversionsIn[idx2])
+                # Rearrange intervals for Drop 3
+                c = [inversionsIn[idx2][1], inversionsIn[idx2][0], inversionsIn[idx2][2], inversionsIn[idx2][3]]
+                inversionsIn[idx2] = c
+                print("After Drop 3:", inversionsIn[idx2])
+
+    
     return inversions, inversionsIn
 
 
@@ -283,12 +324,14 @@ def build_chord(chord_type, key, chord_definitions):
 
     return {"chord_name": chord_name, "chord_notes": chord_notes, "intervals": intervals}
 
-def chord_with_inversions(chord_type, key, octave, chord_types):
+def chord_with_inversions(chord_type, key, octave, chord_types, applyD2, applyD3, applyD24):
+    print("Again -->","applyD2=",applyD2, "applyD3=",applyD3, "applyD24=",applyD24)
+
     result = {}
     result['Type'] = chord_type
     the_chord = build_chord(chord_type, key, chord_types)
     result.update(the_chord)
-    inversions, inversionsIn = generate_inversions(the_chord['chord_notes'], the_chord['intervals'], octave, chord_type='major')
+    inversions, inversionsIn = generate_inversions(the_chord['chord_notes'], the_chord['intervals'], octave, applyD2, applyD3, applyD24, chord_type='major')
     result['Inverions'] = inversions
     result['InverionsIntervals'] = inversionsIn
     return result
@@ -326,7 +369,7 @@ def find_inversions_positions(the_chord, string_set):
 
     inversions_on_fretboard = {}
     for idx,inversion in enumerate(inversions):
-        print(inversionsIn[idx])
+        #print(inversionsIn[idx])
         inversionf = True
         inversion_on_fretboard = []
         for string , note in zip(string_set,inversion):
@@ -342,10 +385,10 @@ def find_inversions_positions(the_chord, string_set):
                 inversion_on_fretboard[idx2]["jsinterval"] = interval_to_name[inversionsIn[idx][idx2]]
             if idx == 0:  
                 inversions_on_fretboard['root'] = inversion_on_fretboard
-                print('root inversion found!')       
+                #print('root inversion found!')       
             else:
                 inversions_on_fretboard['inversion'+str(idx)] = inversion_on_fretboard 
-                print('inversion'+str(idx)+' found!')   
+                #print('inversion'+str(idx)+' found!')   
             
                   
     if not inversions_on_fretboard:
@@ -358,8 +401,8 @@ from collections import defaultdict
 
 
 
-y = chord_with_inversions(chord_type, key, octave, chord_types)
+#y = chord_with_inversions(chord_type, key, octave, chord_types)
 #print(y)
 
-y = find_inversions_positions(y, [1,2,3])
-print(y)
+#y = find_inversions_positions(y, [1,2,3])
+#print(y)

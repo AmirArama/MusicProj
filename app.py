@@ -102,7 +102,7 @@ def learn_your_triads():
     )
 
 chords = get_chord_types()
-print(chords)
+#print(chords)
 @app.route('/fretboard_chord_builder')
 def fretboard_chord_builder():
     num_of_buttons_in_a_row = 4
@@ -119,23 +119,38 @@ def fretboard_chord_builder():
 def get_chord_data():
     note = request.args.get('note')
     chord = request.args.get('chord')
+    drop = request.args.get('drop')
+    #print(request.args)
 
     chord = chord.replace("_", " ")
 
-    print(note,chord)
+    #print(note,chord,drop)
 
     #c = find_all_key_chords_with_inversions(chord, note)
-    c = generate_all_inversions(chord, note)
+    
+    cinfo = None
+    if drop == "drop2":
+        print("drop = ",drop)
+        cinfo = generate_all_inversions(chord, note, True, False, False)
+    elif drop == "drop3":
+        print("drop = ",drop)
+        cinfo = generate_all_inversions(chord, note, False, True, False)
+    elif drop == "drop4":
+        print("drop = ",drop)
+        cinfo = generate_all_inversions(chord, note, False, False, True)
+    else:
+        print("drop = ",drop)
+        cinfo = generate_all_inversions(chord, note, False, False, False)
 
      # Check JSON validity
     try:
-        json.dumps(c)  # Serialize to JSON to ensure validity
+        json.dumps(cinfo)  # Serialize to JSON to ensure validity
         print("JSON is valid")
     except Exception as e:
         print(f"Invalid JSON: {e}")
         return jsonify({"error": "Invalid JSON"}), 500
     
-    return jsonify(c)
+    return jsonify(cinfo)
 
 @app.route('/the_circle_of_fifths')
 def the_circle_of_fifths():
@@ -222,8 +237,8 @@ def filter_data():
                         'string_set': string_set_key
                     })
 
-    print(result)
-    print(len(result))
+    #print(result)
+    #print(len(result))
     # Return the result as JSON
     return jsonify(filtered_data=result)
 
