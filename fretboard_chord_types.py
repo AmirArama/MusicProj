@@ -372,17 +372,31 @@ def find_inversions_positions(the_chord, string_set):
         #print(inversionsIn[idx])
         inversionf = True
         inversion_on_fretboard = []
+        string_on_fretboard = []
         for string , note in zip(string_set,inversion):
             note_on_fretboard = get_note_data(string-1,note)
             if note_on_fretboard == None:
                 inversionf = False
             else:
                 inversion_on_fretboard.append(note_on_fretboard)
+                string_on_fretboard.append(string)
 
         if inversionf == True:
             for  idx2 in range(len(inversion_on_fretboard)):
                 inversion_on_fretboard[idx2]["interval"] = inversionsIn[idx][idx2] 
                 inversion_on_fretboard[idx2]["jsinterval"] = interval_to_name[inversionsIn[idx][idx2]]
+
+                parts = inversion_on_fretboard[idx2]["jsnote"].split("_")
+
+                the_note = (
+                    "string"+str(string_on_fretboard[idx2]) + "_"  
+                    + parts[0] #note name 
+                    + str(inversion_on_fretboard[idx2]["octave"]) 
+                )
+                if len(parts) > 1:
+                    the_note = the_note + '_' + parts[1]
+
+                inversion_on_fretboard[idx2]["note_sound"] = the_note
             if idx == 0:  
                 inversions_on_fretboard['root'] = inversion_on_fretboard
                 #print('root inversion found!')       

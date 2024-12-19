@@ -113,93 +113,143 @@
         {% endfor %}
     </div>
 </div>
+
+<div id="loading-message" style="
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 1em;
+    border: 1px solid #ccc;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+    text-align: center;
+    z-index: 1000;
+">
+    🎸 Loading audio files, please wait... 🎶
+</div>
+
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+
+document.addEventListener("DOMContentLoaded", async function () {
+
+    const audioFiles = [
+        {% for file in audio_files %}
+        "{{ url_for('static', filename='audio/single_notes/' + file) }}"{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const audioCache = {}; // Global cache for preloaded audio
+    const loadingMessage = document.getElementById("loading-message");
+
+    // Preload audio files asynchronously with async/await
+    async function preloadAudioFiles() {
+        try {
+            // Wait for all audio files to preload
+            await Promise.all(
+                audioFiles.map(async (file) => {
+                    return new Promise((resolve, reject) => {
+                        const audio = new Audio(file);
+                        audio.addEventListener("canplaythrough", () => {
+                            audioCache[file] = audio; // Add to cache
+                            resolve();
+                        });
+                        audio.addEventListener("error", () => reject(`Failed to load: ${file}`));
+                        audio.load(); // Start loading
+                    });
+                })
+            );
+            console.log("All audio files preloaded successfully");
+        } catch (error) {
+            console.error("Error preloading audio files:", error);
+        }
+    }
+
+    // Show loading message
+    loadingMessage.style.display = "block";
+
+    await preloadAudioFiles();
+
+    // Hide loading message after preloading completes
+    loadingMessage.style.display = "none";
+
+
+    // Global variables
     const buttons = document.querySelectorAll(".toggle-btn");
     const notesDropdown = document.getElementById("notesDropdown");
-
     const DropDropdown = document.getElementById("DropDropdown");
-    let selectedDropDrop = DropDropdown.value || "nodrop"; // Default to "Drop2" if no selection
+    let selectedDropDrop = DropDropdown.value || "nodrop"; // Default value
+    let fetchedData = {}; // To store fetched chord data
+    let selectedInversion = "root";
+    let selectedStringSet = "1_2_3";
+    let selectedNoteInterval = "notes";
 
-    // Global variable to store fetched data
-    let fetchedData = {};
-
-    // Default filter parameters
-    let selectedInversion = "root"; // Default inversion
-    let selectedStringSet = "1_2_3";         // Default string set
-    let selectedNoteInterval = "notes";    // Default view type (notes or intervals)
-    // Add an event listener for changes to DropDropdown
-   
+    // Event listener for DropDropdown changes
     if (DropDropdown) {
         DropDropdown.addEventListener("change", (event) => {
-            selectedDropDrop = event.target.value; // Update the selectedDropDrop value
-            console.log("Selected Drop:", selectedDropDrop); // Debugging log
-            fetchChordData(); // Fetch chord data when dropdown changes
+            selectedDropDrop = event.target.value;
+            console.log("Selected Drop:", selectedDropDrop);
+            fetchChordData();
         });
     }
 
     // Function to fetch chord data
     const fetchChordData = () => {
-        console.log(selectedDropDrop)
+        console.log(selectedDropDrop);
         const selectedNote = notesDropdown.value;
         const encodedNote = encodeURIComponent(selectedNote);
 
         const selectedChordButton = document.querySelector(".toggle-btn.selected");
         const selectedChord = selectedChordButton ? selectedChordButton.id : null;
 
-        
-
-        console.log("Selected Drop: in fetch", selectedDropDrop); // Debugging log
+        console.log("Selected Drop: in fetch", selectedDropDrop);
 
         if (selectedChord) {
             fetch(`/get_chord_data?note=${encodedNote}&chord=${selectedChord}&drop=${selectedDropDrop}`)
                 .then(response => response.json())
                 .then(data => {
-                    fetchedData = data; // Store fetched data globally
-                    console.log("The Data ====== >>>",data)
-                    populateStringSetDropdown(fetchedData); // Populate the String Set dropdown
-                    if (fetchedData) {
-                        const firstStringSet = Object.keys(fetchedData)[0]; // Get the first string set
-                        selectedStringSet = firstStringSet; // Update selected string set
-                        const firstInversion = Object.keys(fetchedData[firstStringSet])[0]; // Get the first inversion
-                        selectedInversion = firstInversion; // Update selected inversion
+                    fetchedData = data;
+                    console.log("The Data ====== >>>", data);
 
-                        // Update the dropdown values in the UI
+                    populateStringSetDropdown(fetchedData);
+
+                    if (fetchedData) {
+                        const firstStringSet = Object.keys(fetchedData)[0];
+                        selectedStringSet = firstStringSet;
+                        const firstInversion = Object.keys(fetchedData[firstStringSet])[0];
+                        selectedInversion = firstInversion;
+
                         document.getElementById("stringSetDropdown").value = firstStringSet;
                         document.getElementById("inversionDropdown").value = firstInversion;
 
-                        // Re-render the fretboard with updated selection
                         filterAndRenderFretboard();
                     }
-                    //filterAndRenderFretboard(); // Render fretboard with default filters
                 })
                 .catch(error => console.error("Error fetching chord data:", error));
         }
     };
+
+    // Function to populate the string set dropdown
     const populateStringSetDropdown = (fetchedData) => {
-    const stringSetDropdown = document.getElementById("stringSetDropdown");
+        const stringSetDropdown = document.getElementById("stringSetDropdown");
 
-    // Clear existing options
-    stringSetDropdown.innerHTML = '';
+        stringSetDropdown.innerHTML = '';
 
-    // Add an "All" option at the top
-    const allOption = document.createElement("option");
-    allOption.value = "All";
-    allOption.textContent = "All";
-    stringSetDropdown.appendChild(allOption);
+        const allOption = document.createElement("option");
+        allOption.value = "All";
+        allOption.textContent = "All";
+        stringSetDropdown.appendChild(allOption);
 
-    // Populate dropdown with keys from fetchedData
-    Object.keys(fetchedData).forEach(stringSet => {
-        const option = document.createElement("option");
-        option.value = stringSet;
-        option.textContent = stringSet; // Use the key as the label
-        stringSetDropdown.appendChild(option);
-    });
+        Object.keys(fetchedData).forEach(stringSet => {
+            const option = document.createElement("option");
+            option.value = stringSet;
+            option.textContent = stringSet;
+            stringSetDropdown.appendChild(option);
+        });
 
-    // Set the default selection (optional)
-    stringSetDropdown.value = "All";
-};
-
+        stringSetDropdown.value = "All";
+    };
 
     // Function to filter and render the fretboard
     const filterAndRenderFretboard = () => {
@@ -207,56 +257,60 @@ document.addEventListener("DOMContentLoaded", function () {
         const x_offset = 200;
         const y_offset = 100;
 
-        // Clear existing notes
         fretboard.innerHTML = `
             <image href="/static/images/empty_fretboard.png" x="${x_offset}" y="${y_offset}" width="3274" height="786" />
             <image href="/static/images/bone.png" x="${x_offset - 20}" y="${y_offset}" width="20" height="558" />
         `;
 
         let combinedData = [];
-        // Handle "All" for String Sets or a specific string set
-        const stringSets = selectedStringSet === "All"
-            ? Object.keys(fetchedData) // Use all string sets if "All" is selected
-            : [selectedStringSet];
-        stringSets.forEach(stringSet => {
-            // Handle "All" for Inversions or a specific inversion
-            const inversions = selectedInversion === "All"
-                ? Object.keys(fetchedData[stringSet]) // Use all inversions
-                : [selectedInversion]; 
-            // Combine data for the selected inversions
-            inversions.forEach(inversion => {
-                console.log("fetchedData[stringSet] -->",fetchedData[stringSet])
-                const dataList = fetchedData[stringSet];
-                const inversionData = fetchedData[stringSet][inversion];
-                console.log("fetchedData[stringSet][inversion] -->",inversionData)
 
+        const stringSets = selectedStringSet === "All"
+            ? Object.keys(fetchedData)
+            : [selectedStringSet];
+
+        stringSets.forEach(stringSet => {
+            const inversions = selectedInversion === "All"
+                ? Object.keys(fetchedData[stringSet])
+                : [selectedInversion];
+
+            inversions.forEach(inversion => {
+                const inversionData = fetchedData[stringSet][inversion];
                 if (inversionData) {
                     combinedData = combinedData.concat(inversionData.flat());
-                    console.log("combinedData -->",combinedData)
                 }
             });
         });
 
-        // Render combined data on the fretboard
         combinedData.forEach(noteData => {
             const noteElement = document.createElementNS("http://www.w3.org/2000/svg", "image");
             const imageType = selectedNoteInterval === "intervals" ? noteData.jsinterval : noteData.jsnote;
+
             noteElement.setAttribute("href", `/static/images/notes/note_${imageType}.png`);
             noteElement.setAttribute("x", x_offset + noteData.x - 50);
             noteElement.setAttribute("y", y_offset + noteData.y - 50);
             noteElement.setAttribute("width", "100");
             noteElement.setAttribute("height", "100");
             noteElement.setAttribute("class", "fretboard-note");
-            noteElement.setAttribute(
-                "id",
-                `${noteData.note}_${noteData.x}_${noteData.y}`
-            );
+            noteElement.setAttribute("id", `${noteData.note}_${noteData.x}_${noteData.y}`);
+
+            noteElement.onclick = () => {
+                
+                const noteToPlay = `/static/audio/single_notes/${noteData.note_sound}.mp3`;
+                const audio = audioCache[noteToPlay];
+
+                if (audio) {
+                    audio.currentTime = 0;
+                    audio.play();
+                } else {
+                    console.error(`Audio for ${noteToPlay} not found.`);
+                }
+            };
 
             fretboard.appendChild(noteElement);
         });
     };
 
-    // Event listener for chord buttons
+    // Event listeners
     buttons.forEach(button => {
         button.addEventListener("click", function () {
             buttons.forEach(btn => btn.classList.remove("selected"));
@@ -265,25 +319,21 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Event listener for dropdown selection change
     notesDropdown.addEventListener("change", fetchChordData);
 
-    // Event listener for inversion changes
     document.getElementById("inversionDropdown").addEventListener("change", (event) => {
-        selectedInversion = event.target.value; // Update selected inversion
-        filterAndRenderFretboard(); // Re-render with updated filter
+        selectedInversion = event.target.value;
+        filterAndRenderFretboard();
     });
 
-    // Event listener for string set changes
     document.getElementById("stringSetDropdown").addEventListener("change", (event) => {
-        selectedStringSet = event.target.value; // Update selected string set
-        filterAndRenderFretboard(); // Re-render with updated filter
+        selectedStringSet = event.target.value;
+        filterAndRenderFretboard();
     });
 
-    // Event listener for note/interval view changes
     document.getElementById("noteIntervalDropdown").addEventListener("change", (event) => {
-        selectedNoteInterval = event.target.value; // Update view type
-        filterAndRenderFretboard(); // Re-render with updated filter
+        selectedNoteInterval = event.target.value;
+        filterAndRenderFretboard();
     });
 
     // Initial fetch on page load

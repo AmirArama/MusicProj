@@ -10,7 +10,7 @@ from fretboard_notes import fretboard_notes
 from modes_pages import *
 from modes_pages_r import *
 from tenssions_pages import *
-from chord_types import get_chord_types
+from fretboard_chord_types import get_chord_types
 from chord_on_fretboard import find_all_key_chords_with_inversions
 from fretboard_inversions import generate_all_inversions
 
@@ -105,6 +105,12 @@ chords = get_chord_types()
 #print(chords)
 @app.route('/fretboard_chord_builder')
 def fretboard_chord_builder():
+
+    # Get all MP3 files from the static/audio directory
+    audio_dir = os.path.join(app.static_folder, 'audio/single_notes')
+    audio_files = [f for f in os.listdir(audio_dir) if f.endswith('.mp3')]
+    print(audio_files)
+
     num_of_buttons_in_a_row = 4
 
     return render_template(
@@ -112,7 +118,8 @@ def fretboard_chord_builder():
         fretboard_coordinates=fretboard_coordinates,
         fretboard_notes=fretboard_notes,
         chords = chords,
-        num_of_buttons_in_a_row = num_of_buttons_in_a_row
+        num_of_buttons_in_a_row = num_of_buttons_in_a_row,
+        audio_files=audio_files
     )
 
 @app.route('/get_chord_data', methods=['GET'])
