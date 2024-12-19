@@ -263,23 +263,33 @@ document.addEventListener("DOMContentLoaded", async function () {
         `;
 
         let combinedData = [];
+        let firstInversionLength = -1; // Default to -1 for "All"
 
+        // Determine string sets
         const stringSets = selectedStringSet === "All"
             ? Object.keys(fetchedData)
             : [selectedStringSet];
 
+        // Flatten data while capturing the first array length in the first inversion
         stringSets.forEach(stringSet => {
             const inversions = selectedInversion === "All"
                 ? Object.keys(fetchedData[stringSet])
                 : [selectedInversion];
 
-            inversions.forEach(inversion => {
+            inversions.forEach((inversion, inversionIndex) => {
                 const inversionData = fetchedData[stringSet][inversion];
                 if (inversionData) {
+                    // Capture the length of the first array in the first inversion
+                    if (firstInversionLength === -1 && inversionIndex === 0 && selectedStringSet !== "All" && selectedInversion !== "All") {
+                        firstInversionLength = inversionData[0]?.length || 0; // First array's length
+                    }
                     combinedData = combinedData.concat(inversionData.flat());
                 }
             });
         });
+
+        console.log("First Inversion Length (First Array):", firstInversionLength);
+
 
         combinedData.forEach(noteData => {
             const noteElement = document.createElementNS("http://www.w3.org/2000/svg", "image");
@@ -293,8 +303,26 @@ document.addEventListener("DOMContentLoaded", async function () {
             noteElement.setAttribute("class", "fretboard-note");
             noteElement.setAttribute("id", `${noteData.note}_${noteData.x}_${noteData.y}`);
 
-            noteElement.onclick = () => {
-                
+            let pressTimer; // Variable to track the press duration
+
+            // Handle mousedown (start of press)
+            noteElement.addEventListener("mousedown", () => {
+                pressTimer = setTimeout(() => {
+                    // Long press detected: Play all notes in sequence
+                    playAllNotesInSequence();
+                }, 200); // Adjust duration for long press (e.g., 500ms)
+            });
+
+            // Handle mouseup (end of press)
+            noteElement.addEventListener("mouseup", () => {
+                clearTimeout(pressTimer); // Clear the timer to prevent long press action
+
+                // Short press detected: Play single note
+                playSingleNote(noteData);
+            });
+
+            // Play single note
+            function playSingleNote(noteData) {
                 const noteToPlay = `/static/audio/single_notes/${noteData.note_sound}.mp3`;
                 const audio = audioCache[noteToPlay];
 
@@ -304,7 +332,38 @@ document.addEventListener("DOMContentLoaded", async function () {
                 } else {
                     console.error(`Audio for ${noteToPlay} not found.`);
                 }
-            };
+            }
+
+            // Play all notes in sequence in reverse order
+            function playAllNotesInSequence() {
+                // Reverse the array
+                const reversedNotes = [...combinedData].reverse();
+
+                let playedNotes = 0; // Counter to track how many notes have been played
+
+                reversedNotes.forEach((note, index) => {
+                    // Stop after playing notes in the first array of the first inversion
+                    if (firstInversionLength !== -1 && playedNotes >= firstInversionLength) {
+                        return; // Exit playback
+                    }
+
+                    const noteToPlay = `/static/audio/single_notes/${note.note_sound}.mp3`;
+                    const audio = audioCache[noteToPlay];
+
+                    if (audio) {
+                        setTimeout(() => {
+                            audio.currentTime = 0;
+                            audio.play();
+                        }, index * 100); // Play each note with a 100ms interval
+                        playedNotes++; // Increment the counter
+                    } else {
+                        console.error(`Audio for ${noteToPlay} not found.`);
+                    }
+                });
+            }
+
+
+
 
             fretboard.appendChild(noteElement);
         });
