@@ -91,6 +91,8 @@ chord_voicings = {
     ],
     "drop_2_and_3": [
         [1, 2, 4, 6],  # Strings 1, 2, 4, and 6
+        [1, 3, 4, 5],  # Strings 1, 3, 4, and 5
+        [2, 4, 5, 6],  # Strings 2, 4, 5, and 6
     ],
 }
 
