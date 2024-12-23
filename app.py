@@ -138,7 +138,7 @@ def get_chord_data():
     
     chordCollection.place_chord_on_fretboard(chord,note)
     chordCollection.rearrange_dictionary()
-    cinfo = chordCollection.get_inversions_for_note_by_voicing(drop)
+    cinfo = chordCollection.get_inversions_for_note_by_voicing()
      # Check JSON validity
     try:
         json.dumps(cinfo)  # Serialize to JSON to ensure validity

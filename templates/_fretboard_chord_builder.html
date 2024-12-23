@@ -187,14 +187,25 @@ document.addEventListener("DOMContentLoaded", async function () {
     let selectedStringSet = "1_2_3";
     let selectedNoteInterval = "notes";
 
-    // Event listener for DropDropdown changes
     if (DropDropdown) {
         DropDropdown.addEventListener("change", (event) => {
             selectedDropDrop = event.target.value;
-            console.log("Selected Drop:", selectedDropDrop);
-            fetchChordData();
+            
+            //on drop i take selected drop and fetch its keys
+            const voice0 = fetchedData[selectedDropDrop]
+            const stringset0 =  Object.keys(voice0)
+
+            //populate the string sets according to these keys
+            populateStringSetDropdownEx(stringset0);
+
+            //finaly filter the data for the first stringset
+            selectedStringSet = stringset0[0]
+            filterAndRenderFretboard();
+
         });
     }
+
+
 
     // Function to fetch chord data
     const fetchChordData = () => {
@@ -213,13 +224,25 @@ document.addEventListener("DOMContentLoaded", async function () {
                 .then(data => {
                     fetchedData = data;
                     console.log("The Data ====== >>>", data);
+                    console.log(Object.keys(fetchedData)[0]);
 
-                    populateStringSetDropdown(fetchedData);
+                    populateVoicingDropdown(fetchedData)
+
+                    const voice0 = Object.keys(fetchedData)[0]
+                    const stringset0 =  Object.keys(fetchedData[voice0])
+
+                    populateStringSetDropdownEx(stringset0);
+
 
                     if (fetchedData) {
-                        const firstStringSet = Object.keys(fetchedData)[0];
+                        //At first fetch of a chord i take the first voicing, 
+                        //first stringset and first inversion of the full fetchd data
+                        //Fisrt filter will show this data 
+                        const firstVoice = Object.keys(fetchedData)[0];
+
+                        const firstStringSet = Object.keys(fetchedData[firstVoice])[0];
                         selectedStringSet = firstStringSet;
-                        const firstInversion = Object.keys(fetchedData[firstStringSet])[0];
+                        const firstInversion = Object.keys(fetchedData[firstVoice][firstStringSet])[0];
                         selectedInversion = firstInversion;
 
                         document.getElementById("stringSetDropdown").value = firstStringSet;
@@ -234,6 +257,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // Function to populate the string set dropdown
     const populateStringSetDropdown = (fetchedData) => {
+        const selectedDrop = Object.keys(fetchedData)[0];
+
         const stringSetDropdown = document.getElementById("stringSetDropdown");
 
         stringSetDropdown.innerHTML = '';
@@ -243,15 +268,87 @@ document.addEventListener("DOMContentLoaded", async function () {
         allOption.textContent = "All";
         stringSetDropdown.appendChild(allOption);
 
-        Object.keys(fetchedData).forEach(stringSet => {
+        // Populate options based on fetched data
+        const stringSetKeys = Object.keys(fetchedData[selectedDrop]);
+        stringSetKeys.forEach(stringSet => {
             const option = document.createElement("option");
             option.value = stringSet;
             option.textContent = stringSet;
             stringSetDropdown.appendChild(option);
         });
 
-        stringSetDropdown.value = "All";
+        console.log("stringSetKeys", stringSetKeys[0])
+
+            // Set the first key as the selected value, if available
+        if (stringSetKeys.length > 0) {
+            stringSetDropdown.value = stringSetKeys[0];
+            selectedStringSet = stringSetKeys[0]; // Update global variable if necessary
+        } else {
+            stringSetDropdown.value = "All"; // Default to "All" if no keys exist
+            selectedStringSet = "All"; // Update global variable if necessary
+        }
     };
+
+    // Function to populate the string set dropdown
+    const populateStringSetDropdownEx = (Keys) => {
+        const selectedDrop = Keys[0];
+
+        const stringSetDropdown = document.getElementById("stringSetDropdown");
+
+        stringSetDropdown.innerHTML = '';
+
+        const allOption = document.createElement("option");
+        allOption.value = "All";
+        allOption.textContent = "All";
+        stringSetDropdown.appendChild(allOption);
+
+        Keys.forEach(stringSet => {
+            console.log("string set -=-=-", stringSet)
+            const option = document.createElement("option");
+            option.value = stringSet;
+            option.textContent = stringSet;
+            stringSetDropdown.appendChild(option);
+        });
+
+            // Set the first key as the selected value, if available
+        if (Keys.length > 0) {
+            stringSetDropdown.value = Keys[0];
+            selectedStringSet = Keys[0]; // Update global variable if necessary
+        } else {
+            stringSetDropdown.value = "All"; // Default to "All" if no keys exist
+            selectedStringSet = "All"; // Update global variable if necessary
+        }
+    };
+
+    function populateVoicingDropdown(fetchedData) {
+        const dropdown = document.getElementById("DropDropdown");
+        dropdown.innerHTML = ""; // Clear existing options
+
+        // Populate the dropdown with keys from fetchedData
+        const keys = Object.keys(fetchedData);
+        if (keys.length > 0) {
+            keys.forEach((key, index) => {
+                const option = document.createElement("option");
+                option.value = key;
+                option.textContent = key.replace(/_/g, " ").replace(/\b\w/g, char => char.toUpperCase()); // Format for display
+                dropdown.appendChild(option);
+
+                // Set the first key as the selected option
+                if (index === 0) {
+                    option.selected = true;
+                }
+            });
+
+            // Update `selectedDropDrop` or other variables if needed
+            selectedDropDrop = keys[0];
+        } else {
+            // If no keys are present, add a default option
+            const option = document.createElement("option");
+            option.value = "";
+            option.textContent = "No Voicings Available";
+            dropdown.appendChild(option);
+        }
+    }
 
     // Function to filter and render the fretboard
     const filterAndRenderFretboard = () => {
@@ -259,27 +356,39 @@ document.addEventListener("DOMContentLoaded", async function () {
         const x_offset = 200;
         const y_offset = 100;
 
+        
+
         fretboard.innerHTML = `
             <image href="/static/images/empty_fretboard.png" x="${x_offset}" y="${y_offset}" width="3274" height="786" />
             <image href="/static/images/bone.png" x="${x_offset - 20}" y="${y_offset}" width="20" height="558" />
         `;
+
+        // Get the selected drop key
+        const selectedDrop = document.getElementById("DropDropdown").value;
+        console.log("Fetched Data:", fetchedData);
+        console.log("Selected Drop:", selectedDrop);
+        
 
         let combinedData = [];
         let firstInversionLength = -1; // Default to -1 for "All"
 
         // Determine string sets
         const stringSets = selectedStringSet === "All"
-            ? Object.keys(fetchedData)
+            ? Object.keys(fetchedData[selectedDrop])
             : [selectedStringSet];
+        
+        console.log("String Set:", stringSets);       // Value of the string set
+            
 
         // Flatten data while capturing the first array length in the first inversion
         stringSets.forEach(stringSet => {
             const inversions = selectedInversion === "All"
-                ? Object.keys(fetchedData[stringSet])
+                ? Object.keys(fetchedData[selectedDrop][stringSet])
                 : [selectedInversion];
 
             inversions.forEach((inversion, inversionIndex) => {
-                const inversionData = fetchedData[stringSet][inversion];
+                console.log(selectedDrop,stringSet,inversion)
+                const inversionData = fetchedData[selectedDrop][stringSet][inversion];
                 if (inversionData) {
                     // Capture the length of the first array in the first inversion
                     if (firstInversionLength === -1 && inversionIndex === 0 && selectedStringSet !== "All" && selectedInversion !== "All") {

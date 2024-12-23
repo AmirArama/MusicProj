@@ -198,9 +198,11 @@ class ChordClass:
                             inversion_on_fretboard.append(note_on_fretboard)
 
                             if "flat" in note_on_fretboard["jsnote"]:
-                                note_on_fretboard["note_sound"] = "string" + str(string) + "_" + note[0] + "_flat"
+                                note_on_fretboard["note_sound"] = "string" + str(string) + "_" + note[0]+note[2] + "_flat"
                             elif "sharp" in note_on_fretboard["jsnote"]:
-                                note_on_fretboard["note_sound"] = "string" + str(string) + "_" + note[0] + "_sharp"
+                                note_on_fretboard["note_sound"] = "string" + str(string) + "_" + note[0]+note[2] + "_sharp"
+                            else:
+                                note_on_fretboard["note_sound"] = "string" + str(string) + "_" + note
 
                             intervl = inversionIntervals[idx2]
                             note_on_fretboard["interval"] = intervl
