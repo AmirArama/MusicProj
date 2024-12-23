@@ -354,7 +354,7 @@ class ChordCollection:
     
     def place_chord_on_fretboard(self,chordName,note):
         root_notes = self.set_note(note) 
-        chord = chordCollection.get_chord(chordName)
+        chord = self.get_chord(chordName)
         finalDict = {}
         for note in root_notes:
             chord.set_note(note)
@@ -411,7 +411,7 @@ class ChordCollection:
             dataForPring += f"{key}, "
         dataForPring += "\n"+"-"*80+"\n\n"
         return dataForPring
-
+'''
 chordCollection = ChordCollection()
 print(chordCollection) 
 chordCollection.place_chord_on_fretboard("Diminished seventh","E")
@@ -419,8 +419,6 @@ x = chordCollection.get_inversions_for_note()
 #print(x)
 # Example usage:
 chordCollection.rearrange_dictionary()
-
-x = chordCollection.get_inversions_for_note()
 rearranged = chordCollection.get_inversions_for_note_by_voicing("closed_4note")
 
 # You can print or save the rearranged data to verify the structure
@@ -430,3 +428,4 @@ print(json.dumps(rearranged, indent=2))
 #chord.set_note("E3")
 #x = chord.get_inverssions()
 #print(chordCollection.set_note("F#"))
+'''

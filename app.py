@@ -13,6 +13,7 @@ from tenssions_pages import *
 from fretboard_chord_types import get_chord_types
 from chord_on_fretboard import find_all_key_chords_with_inversions
 from fretboard_inversions import generate_all_inversions
+from fretboard_data_strcture import ChordCollection
 
 
 import os
@@ -22,6 +23,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
+
+chordCollection = ChordCollection()
+
 
 # Initialize aubio pitch detector
 sample_rate = 48000
@@ -130,6 +134,29 @@ def get_chord_data():
     #print(request.args)
 
     chord = chord.replace("_", " ")
+    print(chord,note)
+    
+    chordCollection.place_chord_on_fretboard(chord,note)
+    chordCollection.rearrange_dictionary()
+    cinfo = chordCollection.get_inversions_for_note_by_voicing(drop)
+     # Check JSON validity
+    try:
+        json.dumps(cinfo)  # Serialize to JSON to ensure validity
+        print("JSON is valid")
+    except Exception as e:
+        print(f"Invalid JSON: {e}")
+        return jsonify({"error": "Invalid JSON"}), 500
+    
+    return jsonify(cinfo)
+'''
+@app.route('/get_chord_data', methods=['GET'])
+def get_chord_data():
+    note = request.args.get('note')
+    chord = request.args.get('chord')
+    drop = request.args.get('drop')
+    #print(request.args)
+
+    chord = chord.replace("_", " ")
 
     #print(note,chord,drop)
 
@@ -158,6 +185,7 @@ def get_chord_data():
         return jsonify({"error": "Invalid JSON"}), 500
     
     return jsonify(cinfo)
+'''
 
 @app.route('/the_circle_of_fifths')
 def the_circle_of_fifths():
@@ -279,4 +307,5 @@ if __name__ == '__main__':
 
     #app.run(debug=True)
     app.run(debug=True)
+    
     
