@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify, request, url_for, session, redirect
+from flask_cors import CORS
 import zmq
 import json
 import numpy as np
@@ -10,7 +11,7 @@ from fretboard_notes import fretboard_notes
 from modes_pages import *
 from modes_pages_r import *
 from tenssions_pages import *
-from fretboard_chord_types import get_chord_types
+from fretboard_chord_types import get_chord_types, chord_types
 from chord_on_fretboard import find_all_key_chords_with_inversions
 from fretboard_inversions import generate_all_inversions
 from fretboard_data_strcture import ChordCollection
@@ -23,6 +24,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)  # Allow all origins by default
+
 
 chordCollection = ChordCollection()
 
@@ -125,6 +128,20 @@ def fretboard_chord_builder():
         num_of_buttons_in_a_row = num_of_buttons_in_a_row,
         audio_files=audio_files
     )
+
+@app.route('/get_chord_list', methods=['GET'])
+def get_chord_list():
+    chords = chord_types
+
+     # Check JSON validity
+    try:
+        json.dumps(chords)  # Serialize to JSON to ensure validity
+        print("JSON is valid")
+    except Exception as e:
+        print(f"Invalid JSON: {e}")
+        return jsonify({"error": "Invalid JSON"}), 500
+    
+    return jsonify(chords)
 
 @app.route('/get_chord_data', methods=['GET'])
 def get_chord_data():
@@ -307,5 +324,6 @@ if __name__ == '__main__':
 
     #app.run(debug=True)
     app.run(debug=True)
+
     
     
