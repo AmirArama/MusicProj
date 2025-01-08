@@ -125,6 +125,7 @@ class ChordClass:
         chord_notes_with_pitch = [f"{key}{octave}"]
         current_octave = octave
 
+        '''
         for interval in chord_data:
             if interval == "1":
                 continue
@@ -139,7 +140,31 @@ class ChordClass:
 
             # Append the note with pitch
             chord_notes_with_pitch.append(f"{scale[note_index]}{current_octave}")
+        '''
+        
+        prev_idx = root_index
+        prev_semitones = 0
+        for interval in chord_data:
+            if interval == "1":
+                continue
+            
+            # Map the interval to semitones and add to the cumulative total
+            semitones = interval_to_semitones[interval]["semitones"]
+            curr_idx = prev_idx + semitones - prev_semitones
+            curr_idx = curr_idx % 12
+            note_index = (root_index + semitones) % 12
 
+            if curr_idx < prev_idx:
+                current_octave += 1
+            
+            prev_idx = curr_idx 
+            prev_semitones = semitones
+
+            # Append the note with pitch
+            chord_notes_with_pitch.append(f"{scale[note_index]}{current_octave}")
+
+
+            
         # Determine the chord name using the first symbol
         chord_symbol = self.symbols[0]
         self.FullChordName = f"{key}{chord_symbol}"
@@ -182,16 +207,18 @@ class ChordClass:
                 #print("\nstringset =", string_set_str)
                 for idx, inversion in enumerate(inversions):
                     inversionIntervals = inversionsIntervals[idx]
-                    #print("\n" + "-" * 60)
-                    #print("voicing = ", voice, ", InveersionNote = ", inversion)
-                    #print("voicing = ", voice, ", InveersionIntervals = ", inversionIntervals)
-                    #print("-" * 60)
+                    print("\n" + "-" * 60)
+                    print("voicing = ", voice, ", InveersionNote = ", inversion)
+                    print("voicing = ", voice, ", InveersionIntervals = ", inversionIntervals)
+                    print("-" * 60)
 
                     inversion_on_fretboard = []
                     string_on_fretboard = []
                     inversionf = True
                     for idx2, (string, note) in enumerate(zip(string_set, inversion)):
+                        print(string,note)
                         note_on_fretboard = get_note_data(string - 1, note)
+                        print(note_on_fretboard)
                         if note_on_fretboard is None:
                             inversionf = False
                         else:
@@ -234,14 +261,23 @@ class ChordClass:
         self.build_chord(note)
         self.builldInversionsNotes()
         self.findinversion_on_fretboard()
-    
+    '''
     def get_inversion_name(self,inversion_dict):
 
         first_note = inversion_dict[0]['note'][0]
         original_chord = self.FullChordNotes
+        print("self.FullChordNotes = ",self.FullChordNotes)
         original_chord = original_chord[::-1]
 
         chord_len = len(original_chord)
+        #print(chord_len)
+        
+        #    this works for the case of 3 notes chords but not 4 notes 
+        #    it can confuse the lableling of chords that have 2 notes of the same name
+        #    i.e., c# major will also have a c as the 7th interval
+        #    so we need to figure out a different way to lable the chords.
+        #    this code for the case of chord_len == 4 will mark the first inversion as the root
+        
         if chord_len == 3:
             if first_note == original_chord[0][0]:
                 return "root"
@@ -264,8 +300,40 @@ class ChordClass:
             else:
                 return "Unknown inversion"
         else:
+            #print(chord_len)
             return "Invalid chord length"
-        
+    '''
+    def get_inversion_name(self,inversion_dict):
+
+        target_base_note = inversion_dict[0]['note'] #will also hold #/b
+        original_chord = self.FullChordNotes
+        original_chord = original_chord[::-1]
+        chord_len = len(original_chord)
+        index = next((i for i, note in enumerate(original_chord) if note[:-1] == target_base_note), None)
+        print("index",index)
+        print("target_base_note",target_base_note,original_chord)
+
+        if chord_len == 3:
+            if index == 0:
+                return "root"
+            elif index == 1:
+                return "inversion1"
+            elif index == 2:
+                return "inversion2"
+            else:
+                return "Unknown inversion"
+        elif chord_len == 4:
+            if index == 0:
+                return "root"
+            elif index == 1:
+                return "inversion1"
+            elif index == 2:
+                return "inversion2"
+            elif index == 3:
+                return "inversion3"
+            else:
+                return "Unknown inversion"
+
     def __str__(self):
         dataForPring = "\n"+"-"*40+"\n"
         dataForPring += f"Data for a {self.chordName} chord\n"
@@ -416,9 +484,11 @@ class ChordCollection:
 '''
 chordCollection = ChordCollection()
 print(chordCollection) 
-chordCollection.place_chord_on_fretboard("Diminished seventh","E")
+chordCollection.place_chord_on_fretboard("Minor","A")
 x = chordCollection.get_inversions_for_note()
-#print(x)
+print(x)
+'''
+'''
 # Example usage:
 chordCollection.rearrange_dictionary()
 rearranged = chordCollection.get_inversions_for_note_by_voicing("closed_4note")
@@ -431,3 +501,10 @@ print(json.dumps(rearranged, indent=2))
 #x = chord.get_inverssions()
 #print(chordCollection.set_note("F#"))
 '''
+
+chordCollection = ChordCollection()
+chord = chordCollection.get_chord("Major seventh")
+print(chord)
+chord.set_note("C#3")
+x = chord.get_inverssions()
+#print(x)
