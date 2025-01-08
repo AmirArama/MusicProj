@@ -80,6 +80,7 @@ class ChordClass:
                     inv[idx2] = self.stracture[note[0]] 
                 inversions[voice].append(inv)
         self.inversionsIntervals = inversions
+        #print("self.inversionsIntervals",self.inversionsIntervals)
     
     def builldInversionsNotes(self):
         if self.FullChordNotes == None:
@@ -207,18 +208,18 @@ class ChordClass:
                 #print("\nstringset =", string_set_str)
                 for idx, inversion in enumerate(inversions):
                     inversionIntervals = inversionsIntervals[idx]
-                    print("\n" + "-" * 60)
-                    print("voicing = ", voice, ", InveersionNote = ", inversion)
-                    print("voicing = ", voice, ", InveersionIntervals = ", inversionIntervals)
-                    print("-" * 60)
+                    #print("\n" + "-" * 60)
+                    #print("voicing = ", voice, ", InveersionNote = ", inversion)
+                    #print("voicing = ", voice, ", InveersionIntervals = ", inversionIntervals)
+                    #print("-" * 60)
 
                     inversion_on_fretboard = []
                     string_on_fretboard = []
                     inversionf = True
                     for idx2, (string, note) in enumerate(zip(string_set, inversion)):
-                        print(string,note)
+                        #print(string,note)
                         note_on_fretboard = get_note_data(string - 1, note)
-                        print(note_on_fretboard)
+                        #print(note_on_fretboard)
                         if note_on_fretboard is None:
                             inversionf = False
                         else:
@@ -238,7 +239,7 @@ class ChordClass:
                             string_on_fretboard.append(string)
                     if inversionf:
                         #print(inversion_on_fretboard)
-                        inversion_name = self.get_inversion_name(inversion_on_fretboard)
+                        inversion_name = self.get_inversion_name(inversion_on_fretboard,voice)
                         notesOnFretboard[voice][string_set_str][inversion_name] = inversion_on_fretboard
                     else:
                         pass
@@ -261,78 +262,68 @@ class ChordClass:
         self.build_chord(note)
         self.builldInversionsNotes()
         self.findinversion_on_fretboard()
-    '''
-    def get_inversion_name(self,inversion_dict):
-
-        first_note = inversion_dict[0]['note'][0]
-        original_chord = self.FullChordNotes
-        print("self.FullChordNotes = ",self.FullChordNotes)
-        original_chord = original_chord[::-1]
-
-        chord_len = len(original_chord)
-        #print(chord_len)
-        
-        #    this works for the case of 3 notes chords but not 4 notes 
-        #    it can confuse the lableling of chords that have 2 notes of the same name
-        #    i.e., c# major will also have a c as the 7th interval
-        #    so we need to figure out a different way to lable the chords.
-        #    this code for the case of chord_len == 4 will mark the first inversion as the root
-        
-        if chord_len == 3:
-            if first_note == original_chord[0][0]:
-                return "root"
-            elif first_note == original_chord[chord_len-1][0]:
-                return "inversion1"
-            elif first_note == original_chord[chord_len-2][0]:
-                return "inversion2"
-            else:
-                print(first_note,original_chord)
-                return "Unknown inversion"
-        elif chord_len == 4:
-            if first_note == original_chord[0][0]:
-                return "root"
-            elif first_note == original_chord[chord_len-1][0]:
-                return "inversion1"
-            elif first_note == original_chord[chord_len-2][0]:
-                return "inversion2"
-            elif first_note == original_chord[chord_len-3][0]:
-                return "inversion3"
-            else:
-                return "Unknown inversion"
-        else:
-            #print(chord_len)
-            return "Invalid chord length"
-    '''
-    def get_inversion_name(self,inversion_dict):
+    
+    def get_inversion_name(self,inversion_dict,voice):
 
         target_base_note = inversion_dict[0]['note'] #will also hold #/b
         original_chord = self.FullChordNotes
         original_chord = original_chord[::-1]
         chord_len = len(original_chord)
         index = next((i for i, note in enumerate(original_chord) if note[:-1] == target_base_note), None)
-        print("index",index)
-        print("target_base_note",target_base_note,original_chord)
+        #print("index",index)
+        #print("target_base_note",target_base_note,original_chord)
+        debugDict=[]
+        for note_ in inversion_dict:
+            debugDict.append(note_['note'])
 
-        if chord_len == 3:
-            if index == 0:
-                return "root"
-            elif index == 1:
-                return "inversion1"
-            elif index == 2:
-                return "inversion2"
-            else:
-                return "Unknown inversion"
-        elif chord_len == 4:
-            if index == 0:
-                return "root"
-            elif index == 1:
-                return "inversion1"
-            elif index == 2:
-                return "inversion2"
-            elif index == 3:
-                return "inversion3"
-            else:
-                return "Unknown inversion"
+        #print("inversion_dict",debugDict)
+        #print("voice",voice)
+
+        if voice == "drop_2":
+            if chord_len == 4:
+                if index == 0:
+                    return "inversion2"
+                elif index == 1:
+                    return "inversion1"
+                elif index == 2:
+                    return "root"
+                elif index == 3:
+                    return "inversion3"
+                else:
+                    return "Unknown inversion"
+        if voice == "drop_3":
+            if chord_len == 4:
+                if index == 0:
+                    return "inversion1"
+                elif index == 1:
+                    return "root"
+                elif index == 2:
+                    return "inversion3"
+                elif index == 3:
+                    return "inversion2"
+                else:
+                    return "Unknown inversion"
+        else:
+            if chord_len == 3:
+                if index == 0:
+                    return "root"
+                elif index == 1:
+                    return "inversion1"
+                elif index == 2:
+                    return "inversion2"
+                else:
+                    return "Unknown inversion"
+            elif chord_len == 4:
+                if index == 0:
+                    return "root"
+                elif index == 1:
+                    return "inversion1"
+                elif index == 2:
+                    return "inversion2"
+                elif index == 3:
+                    return "inversion3"
+                else:
+                    return "Unknown inversion"
 
     def __str__(self):
         dataForPring = "\n"+"-"*40+"\n"
